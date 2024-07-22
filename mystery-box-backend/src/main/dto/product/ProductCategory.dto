@@ -1,0 +1,15 @@
+export io.qifan.server.product.category.entity.ProductCategory
+
+input ProductCategoryInput {
+    #allScalars(ProductCategory)
+    id
+    id(parent)
+}
+
+specification ProductCategorySpec {
+    #allScalars
+    like/i(name)
+    id(parent)
+    like/i(description)
+    id(creator)
+}

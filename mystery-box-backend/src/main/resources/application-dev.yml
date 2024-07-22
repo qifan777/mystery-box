@@ -1,0 +1,27 @@
+spring:
+  data:
+    redis:
+      database: 0
+      timeout: 10s
+      lettuce:
+        pool:
+          # 连接池最大连接数
+          max-active: 200
+          # 连接池最大阻塞等待时间（使用负值表示没有限制）
+          max-wait: -1ms
+          # 连接池中的最大空闲连接
+          max-idle: 10
+          # 连接池中的最小空闲连接
+          min-idle: 0
+      repositories:
+        enabled: false
+      password: 123456
+  datasource:
+    url: jdbc:mysql://localhost:3306/mystery_box
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+# 微信支付回调
+wx:
+  pay:
+    notify-url: https://www.jarcheng.top/test-api

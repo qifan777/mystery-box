@@ -1,0 +1,14 @@
+export io.qifan.server.box.root.entity.MysteryBox
+
+input MysteryBoxInput {
+    #allScalars(MysteryBox)
+    id
+}
+
+specification MysteryBoxSpec {
+    #allScalars
+    like/i(name)
+    like/i(details)
+    like/i(tips)
+    id(creator)
+}
