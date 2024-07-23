@@ -1,0 +1,13 @@
+export io.qifan.server.address.entity.Address
+
+input AddressInput {
+    #allScalars(Address)
+    id
+}
+//AdressView{
+//    #allScalars(Address)
+//}
+specification AddressSpec {
+    #allScalars
+    id(creator)
+}

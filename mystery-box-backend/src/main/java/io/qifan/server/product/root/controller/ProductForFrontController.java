@@ -41,7 +41,6 @@ public class ProductForFrontController {
     public String save(@RequestBody @Validated ProductInput productInput) {
         if (StringUtils.hasText(productInput.getId())) {
             Product product = productRepository.findById(productInput.getId(), ProductRepository.COMPLEX_FETCHER_FOR_FRONT).orElseThrow(() -> new BusinessException("数据不存在"));
-            product.name().replace("123","12321");
             if (!product.creator().id().equals(StpUtil.getLoginIdAsString())) {
                 throw new BusinessException("只能修改自己的数据");
             }
