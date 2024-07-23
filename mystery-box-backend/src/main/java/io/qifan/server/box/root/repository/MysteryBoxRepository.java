@@ -5,6 +5,8 @@ import io.qifan.server.box.root.entity.MysteryBoxFetcher;
 import io.qifan.server.box.root.entity.MysteryBoxTable;
 import io.qifan.server.box.root.entity.dto.MysteryBoxSpec;
 import io.qifan.server.infrastructure.model.QueryRequest;
+import io.qifan.server.product.root.entity.ProductFetcher;
+import io.qifan.server.product.root.repository.ProductRepository;
 import io.qifan.server.user.root.entity.UserFetcher;
 import org.babyfish.jimmer.spring.repository.JRepository;
 import org.babyfish.jimmer.spring.repository.SpringOrders;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 public interface MysteryBoxRepository extends JRepository<MysteryBox, String> {
     MysteryBoxTable t = MysteryBoxTable.$;
     MysteryBoxFetcher COMPLEX_FETCHER_FOR_ADMIN = MysteryBoxFetcher.$.allScalarFields()
+            .products(ProductRepository.COMPLEX_FETCHER_FOR_ADMIN)
             .creator(UserFetcher.$.phone().nickname())
             .editor(UserFetcher.$.phone().nickname());
     MysteryBoxFetcher COMPLEX_FETCHER_FOR_FRONT = MysteryBoxFetcher.$.allScalarFields()

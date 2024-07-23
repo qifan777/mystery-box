@@ -13,4 +13,5 @@ specification ProductSpec {
     id(category)
     like/i(description)
     id(creator)
+    boxId: String?
 }

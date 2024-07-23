@@ -1,5 +1,7 @@
 package io.qifan.server.product.root.repository;
 
+import io.qifan.server.TableExes;
+import io.qifan.server.box.product.entity.MysteryBoxProductRelTableEx;
 import io.qifan.server.infrastructure.model.QueryRequest;
 import io.qifan.server.product.category.entity.ProductCategoryFetcher;
 import io.qifan.server.product.root.entity.Product;
@@ -13,6 +15,7 @@ import org.babyfish.jimmer.spring.repository.support.SpringPageFactory;
 import org.babyfish.jimmer.sql.fetcher.Fetcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.StringUtils;
 
 public interface ProductRepository extends JRepository<Product, String> {
     ProductTable t = ProductTable.$;
@@ -28,8 +31,13 @@ public interface ProductRepository extends JRepository<Product, String> {
                                    Fetcher<Product> fetcher) {
         ProductSpec query = queryRequest.getQuery();
         Pageable pageable = queryRequest.toPageable();
+        MysteryBoxProductRelTableEx t2 = TableExes.MYSTERY_BOX_PRODUCT_REL_TABLE_EX;
         return sql().createQuery(t)
                 .where(query)
+                .whereIf(StringUtils.hasText(query.getBoxId()), t.id()
+                        .notIn(sql().createSubQuery(t2)
+                                .where(t2.mysteryBoxId().eqIf(StringUtils.hasText(query.getBoxId()), query.getBoxId()))
+                                .select(t2.productId())))
                 .orderBy(SpringOrders.toOrders(t, pageable.getSort()))
                 .select(t.fetch(fetcher))
                 .fetchPage(queryRequest.getPageNum() - 1, queryRequest.getPageSize(),

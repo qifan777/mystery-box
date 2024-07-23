@@ -3,6 +3,7 @@ export io.qifan.server.box.root.entity.MysteryBox
 input MysteryBoxInput {
     #allScalars(MysteryBox)
     id
+    productIds: Array<String>
 }
 
 specification MysteryBoxSpec {

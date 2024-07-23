@@ -1,0 +1,13 @@
+export io.qifan.server.box.product.entity.MysteryBoxProductRel
+
+input MysteryBoxProductRelInput {
+    #allScalars(MysteryBoxProductRel)
+    id
+}
+
+specification MysteryBoxProductRelSpec {
+    #allScalars
+    id(creator)
+    id(product)
+    id(mysteryBox)
+}
