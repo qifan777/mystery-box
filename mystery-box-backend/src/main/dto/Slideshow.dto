@@ -1,0 +1,13 @@
+export io.github.qifan777.server.slideshow.entity.Slideshow
+
+input SlideshowInput {
+    #allScalars(Slideshow)
+    id
+}
+
+specification SlideshowSpec {
+    #allScalars
+    like/i(content)
+    like/i(navigatorId)
+    id(creator)
+}

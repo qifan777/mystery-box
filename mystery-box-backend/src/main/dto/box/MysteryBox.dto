@@ -1,4 +1,4 @@
-export io.qifan.server.box.root.entity.MysteryBox
+export io.github.qifan777.server.box.root.entity.MysteryBox
 
 input MysteryBoxInput {
     #allScalars(MysteryBox)

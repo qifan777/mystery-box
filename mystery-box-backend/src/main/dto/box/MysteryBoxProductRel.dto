@@ -1,4 +1,4 @@
-export io.qifan.server.box.product.entity.MysteryBoxProductRel
+export io.github.qifan777.server.box.product.entity.MysteryBoxProductRel
 
 input MysteryBoxProductRelInput {
     #allScalars(MysteryBoxProductRel)

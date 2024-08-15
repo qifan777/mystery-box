@@ -1,4 +1,4 @@
-export io.qifan.server.product.category.entity.ProductCategory
+export io.github.qifan777.server.product.category.entity.ProductCategory
 
 input ProductCategoryInput {
     #allScalars(ProductCategory)

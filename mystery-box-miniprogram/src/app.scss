@@ -1,0 +1,11 @@
+@mixin text-max-line($line) {
+  // 文字只能显示一行
+  -webkit-line-clamp: $line;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  overflow: hidden;
+  // 溢出部分用 ...代替
+  text-overflow: ellipsis;
+}
+$primary-color: #4C7459;
+$primary-color-end: #3e5f49;

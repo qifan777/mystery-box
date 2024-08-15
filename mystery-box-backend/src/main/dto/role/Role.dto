@@ -1,4 +1,4 @@
-export io.qifan.server.role.entity.Role
+export io.github.qifan777.server.role.entity.Role
 input RoleInput {
     #allScalars(Role)
     id?

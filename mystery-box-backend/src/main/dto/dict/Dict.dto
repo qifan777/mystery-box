@@ -1,4 +1,4 @@
-export io.qifan.server.dict.entity.Dict
+export io.github.qifan777.server.dict.entity.Dict
 input DictInput {
     #allScalars(Dict)
     id?

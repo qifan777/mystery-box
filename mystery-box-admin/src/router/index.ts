@@ -58,6 +58,17 @@ const router = createRouter({
           props(to) {
             return { id: to.query.id }
           }
+        },
+        {
+          path: '/slideshow',
+          component: () => import('@/views/slideshow/slideshow-view.vue')
+        },
+        {
+          path: '/slideshow-details',
+          component: () => import('@/views/slideshow/slideshow-details-view.vue'),
+          props(to) {
+            return { id: to.query.id }
+          }
         }
       ]
     },

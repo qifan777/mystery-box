@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="" type="io.qifan.mall.server.dict.model.DictGenContext" -->
+<#-- @ftlvariable name="" type="io.github.qifan777.server.dict.model.DictGenContext" -->
 
 export const DictConstants = {
 <#list getDictTypes() as type>

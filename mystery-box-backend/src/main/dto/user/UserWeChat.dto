@@ -1,4 +1,4 @@
-export io.qifan.server.user.wechat.entity.UserWeChat
+export io.github.qifan777.server.user.wechat.entity.UserWeChat
 input UserWeChatCreateInput {
     #allScalars(UserWeChat)
 }

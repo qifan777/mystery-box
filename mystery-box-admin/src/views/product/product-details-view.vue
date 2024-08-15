@@ -33,8 +33,8 @@ const rules = reactive<FormRules<ProductInput>>({
   categoryId: [{ required: true, message: '请输入类别', trigger: 'blur' }],
   description: [{ required: true, message: '请输入描述', trigger: 'blur' }],
   tags: [{ required: true, message: '请输入标签', trigger: 'blur' }],
-  specifications: [{ required: true, message: '请输入规格', trigger: 'blur' }],
-  attributes: [{ required: true, message: '请输入属性', trigger: 'blur' }]
+  specifications: [{ required: true, message: '请输入规格', trigger: 'blur' }]
+  // attributes: [{ required: true, message: '请输入属性', trigger: 'blur' }]
 })
 const handleConfirm = () => {
   formRef.value?.validate(

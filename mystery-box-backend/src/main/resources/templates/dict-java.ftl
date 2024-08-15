@@ -1,5 +1,5 @@
-<#-- @ftlvariable name="" type="io.qifan.server.dict.model.DictGenContext" -->
-package io.qifan.server.dict.model;
+<#-- @ftlvariable name="" type="io.github.qifan777.server.dict.model.DictGenContext" -->
+package io.github.qifan777.server.dict.model;
 import lombok.Getter;
 import lombok.AllArgsConstructor;
 

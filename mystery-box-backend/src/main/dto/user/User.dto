@@ -1,4 +1,4 @@
-export io.qifan.server.user.root.entity.User
+export io.github.qifan777.server.user.root.entity.User
 
 input UserCreateInput {
     #allScalars(User)
