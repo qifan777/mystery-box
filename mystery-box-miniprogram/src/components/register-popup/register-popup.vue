@@ -10,7 +10,7 @@
         <image
           class="climb"
           mode="heightFix"
-          src="../../assets/images/climb.png"
+          src="@/assets/images/climb.png"
         ></image>
       </div>
       <div class="title-section">
@@ -72,7 +72,7 @@ page,
 }
 
 .register-section {
-  height: 500px;
+  height: 460px;
   background-color: white;
   width: 100%;
 

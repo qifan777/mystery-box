@@ -20,11 +20,12 @@
         {{ tag }}
       </nut-tag>
     </div>
-    <div class="price-brand">
+    <div class="price-cart" @click.stop="emit('add')">
       <div class="price">￥{{ product.price }}</div>
-      <div class="brand" v-if="product.brand">
-        <nut-tag type="primary">{{ product.brand }}</nut-tag>
-      </div>
+      <image
+        class="cart"
+        src="@/assets/icons/shopping-cart-one-active.png"
+      ></image>
     </div>
   </div>
 </template>
@@ -36,13 +37,13 @@ withDefaults(
       cover: string;
       name: string;
       price: number;
-      brand?: string;
       tags?: string[];
     };
     width?: string;
   }>(),
   { width: "100%" },
 );
+const emit = defineEmits<{ add: [] }>();
 </script>
 
 <style lang="scss">
@@ -72,7 +73,7 @@ withDefaults(
       --nut-tag-font-size: 18px;
     }
   }
-  .price-brand {
+  .price-cart {
     margin-top: 15px;
     display: flex;
     align-items: center;
@@ -80,10 +81,9 @@ withDefaults(
     .price {
       color: rgba(red, 0.9);
     }
-    .brand {
-      --nut-tag-font-size: 18px;
-      display: flex;
-      align-items: center;
+    .cart {
+      width: 45px;
+      height: 45px;
     }
   }
 }

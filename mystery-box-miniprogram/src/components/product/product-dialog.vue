@@ -3,7 +3,7 @@ import { ProductDto } from "@/apis/__generated/model/dto";
 
 defineProps<{
   product: Pick<
-    ProductDto["ProductRepository/COMPLEX_FETCHER"],
+    ProductDto["ProductRepository/COMPLEX_FETCHER_FOR_FRONT"],
     | "name"
     | "specifications"
     | "tags"
@@ -23,6 +23,7 @@ const emit = defineEmits<{
 <template>
   <div class="product-dialog">
     <nut-popup
+      lock-scroll
       style="background-color: black"
       :visible="visible"
       round
@@ -36,12 +37,6 @@ const emit = defineEmits<{
             :src="product.cover"
             mode="widthFix"
           ></image>
-          <div
-            :class="[
-              product.tags[0] === '超神款' ? 'super' : '',
-              product.tags[0] === '隐藏款' ? 'middle' : '',
-            ]"
-          ></div>
           <div class="info">
             <div class="row">
               <div class="label">价格:</div>
@@ -90,22 +85,6 @@ const emit = defineEmits<{
       width: 500px;
       margin: auto;
       display: block;
-    }
-    .super {
-      background-image: url("../../assets/icons/super-star.png");
-      background-size: contain;
-      background-repeat: no-repeat;
-      width: 220px;
-      height: 140px;
-      margin: auto;
-    }
-    .middle {
-      background-image: url("../../assets/icons/middle-star.png");
-      background-size: contain;
-      background-repeat: no-repeat;
-      width: 220px;
-      height: 140px;
-      margin: auto;
     }
     .info {
       background-color: #1a1a1a;

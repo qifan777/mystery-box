@@ -9,7 +9,7 @@
       v-else
       :style="{ width, height, borderRadius: radius }"
       v-bind="{ ...$attrs, mode }"
-      src="@/assets/icons/perople.png"
+      src="@/assets/icons/user.png"
     ></image>
   </div>
 </template>

@@ -40,13 +40,15 @@ Taro.showShareMenu({
       :product="activeProduct"
     ></product-dialog>
     <div class="box-details" v-if="box">
-      <div class="name">{{ box.name }}</div>
-      <div class="probability">
-        <image src="@/assets/icons/baodi.png" mode="heightFix"></image>
-        <div class="value">
-          价值 {{ box.products[0].price }}-{{
-            box.products[box.products.length - 1].price
-          }}元
+      <div class="box-info">
+        <div class="name">{{ box.name }}</div>
+        <div class="probability">
+          <image src="@/assets/icons/baodi.png" mode="heightFix"></image>
+          <div class="value">
+            价值 {{ box.products[0].price }}-{{
+              box.products[box.products.length - 1].price
+            }}元
+          </div>
         </div>
       </div>
       <div class="product-list">
@@ -82,8 +84,8 @@ Taro.showShareMenu({
       </div>
       <nut-divider>购买说明</nut-divider>
       <div class="description">
-        <div>【超神款】：概率为【0.13%】</div>
-        <div>【超神款】：概率为【7.46%】</div>
+        <div>【普通款】：概率为【0.13%】</div>
+        <div>【隐藏款】：概率为【7.46%】</div>
         <div>【超神款】：概率为【92.41%】</div>
       </div>
     </div>
@@ -107,40 +109,39 @@ page {
 }
 
 .box-details {
-  margin: 15px;
-  background-color: white;
-  padding: 15px;
-  border-radius: 20px;
-
-  .name {
-    font-size: 32px;
-    margin-bottom: 20px;
-  }
-
-  .probability {
-    display: flex;
-    align-items: center;
-
-    image {
-      height: 40px;
+  .box-info {
+    padding: 30px;
+    background-color: white;
+    .name {
+      font-size: 32px;
+      margin-bottom: 20px;
     }
 
-    .value {
-      margin-left: 20px;
-      font-size: 28px;
-      background-color: rgba(black, 0.1);
-      padding: 7px 20px;
-      border-radius: 9999px;
-      color: rgba(red, 0.6);
+    .probability {
+      display: flex;
+      align-items: center;
+
+      image {
+        height: 40px;
+      }
+
+      .value {
+        margin-left: 20px;
+        font-size: 28px;
+        background-color: rgba(black, 0.1);
+        padding: 7px 20px;
+        border-radius: 9999px;
+        color: rgba(red, 0.6);
+      }
     }
   }
 
   .product-list {
-    display: grid;
-    grid-template-columns: repeat(3, 220px);
+    padding: 30px;
+    background-color: white;
+    display: flex;
     justify-content: space-around;
-    margin: 50px 0;
-    row-gap: 20px;
+    align-items: center;
 
     .product {
       height: 340px;
@@ -199,6 +200,15 @@ page {
       padding: 10px;
       background-color: rgba(black, 0.1);
       border-radius: 10px;
+    }
+  }
+  .details {
+    .product {
+      margin-top: 50px;
+      background-color: white;
+      .cover {
+        width: 100%;
+      }
     }
   }
 }

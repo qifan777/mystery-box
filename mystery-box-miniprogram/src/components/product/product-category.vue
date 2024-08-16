@@ -3,20 +3,19 @@ import { PropType, SlotsType, defineComponent, reactive } from "vue";
 import { ScrollView, ScrollViewProps } from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import { ProductCategoryDto } from "@/apis/__generated/model/dto";
-
+type ProductCategory =
+  ProductCategoryDto["ProductCategoryRepository/COMPLEX_FETCHER_FOR_FRONT"];
 export default defineComponent({
   name: "CategoryProducts",
   props: {
     categories: {
-      type: Array as PropType<
-        ProductCategoryDto["ProductCategoryRepository/COMPLEX_FETCHER"][]
-      >,
+      type: Array as PropType<ProductCategory[]>,
       required: true,
     },
   },
   slots: Object as SlotsType<{
     default: {
-      product: ProductCategoryDto["ProductCategoryRepository/COMPLEX_FETCHER"]["products"][0];
+      product: ProductCategory["products"][0];
     };
   }>,
   setup(props, { slots }) {
@@ -134,10 +133,10 @@ export default defineComponent({
                 }}
               >
                 <div class="name-icon">
-                  {category.image ? (
+                  {category.icon ? (
                     // mode={"aspectFill"} 优先保证图片的比例，无法显示的部分会截切掉。
                     <image
-                      src={category.image}
+                      src={category.icon}
                       class="icon"
                       mode={"aspectFill"}
                     ></image>
@@ -162,7 +161,7 @@ export default defineComponent({
               // 每个类别对应多个商品
               <div class="category-products">
                 <div class="category-name">{category.name}</div>
-                <div class="product-wrapper">
+                <div class="products">
                   {/* 商品插槽，商品的样式比较动态，留给引用方实现。 */}
                   {category.products.map((product) => (
                     <div>{slots.default({ product })}</div>
@@ -221,13 +220,16 @@ export default defineComponent({
 
     .product-section {
       background-color: white;
-      padding: 15px;
-
+      padding: 15px 15px 120px;
       .category-products {
         .category-name {
           padding: 20px 0;
           font-size: 32px;
           color: rgba(#000, 0.8);
+        }
+        .products {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
         }
       }
     }

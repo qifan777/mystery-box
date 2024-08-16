@@ -1,8 +1,238 @@
 {
   "description": "项目私有配置文件。此文件中的内容将覆盖 project.config.json 中的相同字段。项目的改动优先同步到此文件中。详见文档：https://developers.weixin.qq.com/miniprogram/dev/devtools/projectconfig.html",
-  "projectname": "mystery-box-miniprogram",
+  "projectname": "handmade",
   "setting": {
     "compileHotReLoad": true,
     "urlCheck": false
+  },
+  "condition": {
+    "miniprogram": {
+      "list": [
+        {
+          "name": "pages/box/box-details",
+          "pathName": "pages/box/box-details",
+          "query": "id=defb40ceb03740068907138adecaf1a3",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/product/product-details",
+          "pathName": "pages/product/product-details",
+          "query": "id=54a3eb1e81214bb88268c1e24004ee1c",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/order/order-list",
+          "pathName": "pages/order/order-list",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/handicraft/handicraft-list",
+          "pathName": "pages/handicraft/handicraft-list",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "钱包",
+          "pathName": "pages/wallet/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "vip牵线历史",
+          "pathName": "pages/vip/vip-introduce-history",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "客服",
+          "pathName": "pages/customer-service/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "我的权益",
+          "pathName": "pages/vip/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "vip等级列表",
+          "pathName": "pages/vip/vip-level-list",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/member/member",
+          "pathName": "pages/member/member",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/other/feedback",
+          "pathName": "pages/other/feedback",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/other/complaint",
+          "pathName": "pages/other/complaint",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/user/info-edit",
+          "pathName": "pages/user/info-edit",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/spouse/spouse",
+          "pathName": "pages/spouse/spouse",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/user/user-info",
+          "pathName": "pages/user/user-info",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/user/index",
+          "pathName": "pages/user/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/active/active-detail",
+          "pathName": "pages/active/active-detail",
+          "query": "id=0",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/active/active",
+          "pathName": "pages/active/active",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/active/active-detail",
+          "pathName": "pages/active/active-detail",
+          "query": "id=1",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "盲盒订单列",
+          "pathName": "pages/box/box-order-list",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "盲盒详情",
+          "pathName": "pages/box/box-details",
+          "query": "id=defb40ceb03740068907138adecaf1a3",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "盲盒",
+          "pathName": "pages/box/box-list",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "优惠券列表",
+          "pathName": "pages/coupon/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "订单列表",
+          "pathName": "pages/order/order-list",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/user/index",
+          "pathName": "pages/user/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "订单详情",
+          "pathName": "pages/order/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "地址列表",
+          "pathName": "pages/address/address-list",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "新增地址",
+          "pathName": "pages/address/address-save",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "优惠券",
+          "pathName": "pages/coupon/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "邀请历史",
+          "pathName": "pages/invite/invite-history",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "pages/index/index",
+          "query": "scene=123",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "邀请界面",
+          "pathName": "pages/invite/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        }
+      ]
+    }
   }
 }

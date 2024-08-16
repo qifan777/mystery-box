@@ -59,9 +59,14 @@
                 {{ activeSku.price }}
               </span>
             </div>
-            <div class="add-cert" @click="() => addProduct()">
+            <div
+              class="add-cert"
+              @click="() => addProduct()"
+              v-if="activeSku.stock > 0"
+            >
               <span class="prefix">+</span>加入购物车
             </div>
+            <nut-button disabled plain v-else>库存不足</nut-button>
           </div>
         </scroll-view></nut-popup
       >

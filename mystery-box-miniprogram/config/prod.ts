@@ -1,5 +1,8 @@
-import type { UserConfigExport } from "@tarojs/cli";
-export default {
+module.exports = {
+  env: {
+    NODE_ENV: '"production"',
+  },
+  defineConstants: {},
   mini: {},
   h5: {
     /**
@@ -28,5 +31,5 @@ export default {
     //       postProcess: (context) => ({ ...context, outputPath: path.join(staticDir, 'index.html') })
     //     }))
     // }
-  }
-} satisfies UserConfigExport<'webpack5'>
+  },
+};

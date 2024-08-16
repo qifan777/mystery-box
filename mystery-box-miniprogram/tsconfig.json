@@ -13,6 +13,7 @@
     "noUnusedParameters": true,
     "strictNullChecks": true,
     "sourceMap": true,
+    "baseUrl": ".",
     "rootDir": ".",
     "jsx": "preserve",
     "allowJs": true,
@@ -21,10 +22,9 @@
       "node_modules/@types"
     ],
     "paths": {
-      // TS5090 leading './'
-      "@/*": ["./src/*"]
+      "@/*": ["src/*"]
     }
   },
-  "include": ["./src", "./types","components.d.ts", "./config"],
+  "include": ["./src", "./types", "components.d.ts","./config"],
   "compileOnSave": false
 }

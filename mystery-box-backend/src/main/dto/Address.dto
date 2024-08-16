@@ -3,6 +3,9 @@ export io.github.qifan777.server.address.entity.Address
 input AddressInput {
     #allScalars(Address)
     id
+    -province
+    -district
+    -city
 }
 //AdressView{
 //    #allScalars(Address)

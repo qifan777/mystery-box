@@ -1,33 +1,34 @@
 {
   "miniprogramRoot": "dist/",
-  "projectname": "mystery-box-miniprogram",
-  "description": "",
-  "appid": "wx12756a2557e97544",
+  "description": "电商微信小程序",
   "setting": {
-    "urlCheck": true,
+    "urlCheck": false,
     "es6": false,
     "enhance": false,
     "compileHotReLoad": false,
     "postcss": false,
-    "minified": false,
+    "minified": true,
+    "ignoreUploadUnusedFiles": true,
     "babelSetting": {
       "ignore": [],
       "disablePlugins": [],
       "outputPath": ""
     },
-    "minifyWXML": true,
-    "minifyWXSS": true
+    "coverView": false,
+    "showShadowRootInWxmlPanel": false,
+    "packNpmRelationList": []
   },
   "compileType": "miniprogram",
-  "libVersion": "3.5.4",
   "srcMiniprogramRoot": "dist/",
-  "packOptions": {
-    "ignore": [],
-    "include": []
-  },
   "condition": {},
   "editorSetting": {
     "tabIndent": "insertSpaces",
     "tabSize": 2
-  }
+  },
+  "libVersion": "3.2.0",
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "appid": "wx11d9bed0eb635a82"
 }
