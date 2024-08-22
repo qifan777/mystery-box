@@ -1,8 +1,10 @@
 <script lang="ts" setup>
-import { useMenuStore } from '../store/menu-store'
+import { menuQueryOptions, useMenuStore } from '../store/menu-store'
 import { storeToRefs } from 'pinia'
 import DictSelect from '@/components/dict/dict-select.vue'
 import { DictConstants } from '@/apis/__generated/model/enums/DictConstants'
+import RemoteSelect from '@/components/base/form/remote-select.vue'
+import { api } from '@/utils/api-instance'
 
 const menuStore = useMenuStore()
 const { query } = storeToRefs(menuStore)
@@ -14,7 +16,11 @@ const { query } = storeToRefs(menuStore)
         <el-input v-model="query.name"></el-input>
       </el-form-item>
       <el-form-item label="父菜单Id">
-        <el-input v-model="query.parentId"></el-input>
+        <remote-select
+          label-prop="name"
+          :query-options="menuQueryOptions"
+          v-model="query.parentId"
+        ></remote-select>
       </el-form-item>
       <el-form-item label="路由路径">
         <el-input v-model="query.path"></el-input>

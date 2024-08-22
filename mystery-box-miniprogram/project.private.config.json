@@ -9,6 +9,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "pages/box/box-order-details",
+          "pathName": "pages/box/box-order-details",
+          "query": "id=a6e0a63fc40d4726b9b049e3b78b4069",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "pages/box/box-details",
           "pathName": "pages/box/box-details",
           "query": "id=defb40ceb03740068907138adecaf1a3",

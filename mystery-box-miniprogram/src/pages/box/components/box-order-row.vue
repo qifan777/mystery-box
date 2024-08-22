@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { BlindBoxOrderDto } from "@/apis/__generated/model/dto";
 import DictColumn from "@/components/dict/dict-column.vue";
 import { DictConstants } from "@/apis/__generated/model/enums/DictConstants";
 import dayjs from "dayjs";
+import { MysteryBoxOrderDto } from "@/apis/__generated/model/dto";
 defineProps<{
-  order: BlindBoxOrderDto["BlindBoxOrderRepository/COMPLEX_FETCHER"];
+  order: MysteryBoxOrderDto["MysteryBoxOrderRepository/COMPLEX_FETCHER_FOR_FRONT"];
 }>();
 </script>
 
@@ -20,10 +20,10 @@ defineProps<{
       ></dict-column>
     </div>
     <div class="list">
-      <div class="row" v-for="item in order.blindBoxOrderItems">
-        <product-row :key="item.blindBox.id" :product="item.blindBox">
+      <div class="row" v-for="item in order.items" :key="item.mysteryBoxId">
+        <product-row :key="item.mysteryBoxId" :product="item.mysteryBox">
           <template #operation>
-            <div class="count">x{{ item.blindBoxCount }}</div>
+            <div class="count">x{{ item.mysteryBoxCount }}</div>
           </template>
         </product-row>
         <scroll-view :scroll-x="true">
@@ -31,14 +31,13 @@ defineProps<{
             <image
               :src="product.cover"
               mode="aspectFill"
-              v-for="product in item.products"
+              v-for="product in item.mysteryBox.products"
               :key="product.id"
             ></image>
           </div>
         </scroll-view>
       </div>
     </div>
-
     <div class="total">合计：￥{{ order.baseOrder.payment.payAmount }}</div>
     <div class="buttons">
       <slot></slot>

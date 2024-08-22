@@ -8,6 +8,7 @@
       <!-- 当页签新增或者删除时的过渡动画 -->
       <transition-group name="list">
         <router-tag
+          ref="tagRefs"
           :tag="tag"
           :index="index"
           v-for="(tag, index) in tagStore.tags"
@@ -25,10 +26,11 @@
 <script setup lang="ts">
 import { useTagStore } from '@/layout/store/tag-store'
 import RouterTag from './router-tag.vue'
-import { ref } from 'vue'
+import { nextTick, ref, watch } from 'vue'
 import { ArrowLeftBold, ArrowRightBold } from '@element-plus/icons-vue'
 const tagStore = useTagStore()
 const tagWrapperRef = ref<HTMLDivElement>()
+const tagRefs = ref<InstanceType<typeof RouterTag>[]>([])
 const scroll = (direction: 'right' | 'left') => {
   if (tagWrapperRef.value) {
     tagWrapperRef.value.scrollTo({
@@ -37,6 +39,22 @@ const scroll = (direction: 'right' | 'left') => {
     })
   }
 }
+watch(
+  () => tagStore.activeTag,
+  (value) => {
+    nextTick(() => {
+      let width = 0
+      for (let i = 0; i < tagStore.tags.findIndex((row) => row.id == value.id); i++) {
+        width += tagRefs.value[i].$el.clientWidth
+      }
+      console.log(width)
+      tagWrapperRef.value?.scrollTo({
+        left: width,
+        behavior: 'smooth'
+      })
+    })
+  }
+)
 </script>
 
 <style lang="scss" scoped>

@@ -1,9 +1,9 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 
 import { useHomeStore } from '@/stores/home-store'
 
 const router = createRouter({
-  history: createWebHashHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
@@ -69,6 +69,74 @@ const router = createRouter({
           props(to) {
             return { id: to.query.id }
           }
+        },
+        {
+          path: '/coupon',
+          component: () => import('@/views/coupon/coupon-view.vue')
+        },
+        {
+          path: '/coupon-details',
+          component: () => import('@/views/coupon/coupon-details-view.vue'),
+          props(to) {
+            return { id: to.query.id }
+          }
+        },
+        {
+          path: '/coupon-user-rel',
+          component: () => import('@/views/coupon-user-rel/coupon-user-rel-view.vue')
+        },
+        {
+          path: '/coupon-user-rel-details',
+          component: () => import('@/views/coupon-user-rel/coupon-user-rel-details-view.vue'),
+          props(to) {
+            return { id: to.query.id }
+          }
+        },
+        {
+          path: '/vip-level',
+          component: () => import('@/views/vip-level/vip-level-view.vue')
+        },
+        {
+          path: '/vip-level-details',
+          component: () => import('@/views/vip-level/vip-level-details-view.vue'),
+          props(to) {
+            return { id: to.query.id }
+          }
+        },
+        {
+          path: '/vip',
+          component: () => import('@/views/vip/vip-view.vue')
+        },
+        {
+          path: '/vip-config',
+          component: () => import('@/views/vip/vip-config-view.vue')
+        },
+
+        {
+          path: '/vip-details',
+          component: () => import('@/views/vip/vip-details-view.vue'),
+          props(to) {
+            return { id: to.query.id }
+          }
+        },
+        {
+          path: '/vip-order',
+          component: () => import('@/views/vip-order/vip-order-view.vue')
+        },
+        {
+          path: '/carriage-template',
+          component: () => import('@/views/carriage-template/carriage-template-view.vue')
+        },
+        {
+          path: '/carriage-template-details',
+          component: () => import('@/views/carriage-template/carriage-template-details-view.vue'),
+          props(to) {
+            return { id: to.query.id }
+          }
+        },
+        {
+          path: '/feedback',
+          component: () => import('@/views/feedback/feedback-view.vue')
         }
       ]
     },

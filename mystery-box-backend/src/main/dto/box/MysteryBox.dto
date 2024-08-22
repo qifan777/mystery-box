@@ -5,7 +5,12 @@ input MysteryBoxInput {
     id
     productIds: Array<String>
 }
-
+//MystryBoxView {
+//    #allScalars
+//    products{
+//        #allScalars
+//    }
+//}
 specification MysteryBoxSpec {
     #allScalars
     like/i(name)

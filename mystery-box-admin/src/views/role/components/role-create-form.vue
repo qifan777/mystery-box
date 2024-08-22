@@ -45,7 +45,7 @@ const handleConfirm = () => {
 const menuTreeList = ref<MenuTreeDto[]>([])
 onMounted(() => {
   api.menuController.query({ body: { pageNum: 1, query: {}, pageSize: 100000 } }).then((res) => {
-    menuTreeList.value = buildMenuTree(null, res.content)
+    menuTreeList.value = buildMenuTree(res.content)
     console.log(menuTreeList.value)
   })
 })

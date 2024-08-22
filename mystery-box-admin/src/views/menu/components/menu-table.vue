@@ -87,7 +87,7 @@ const handleDelete = (ids: string[]) => {
       </el-table-column>
       <el-table-column label="父菜单Id" prop="parentId" sortable="custom">
         <template v-slot:default="{ row }: MenuScope">
-          {{ row.parentId }}
+          {{ row.parent?.name }}
         </template>
       </el-table-column>
       <el-table-column label="路由路径" prop="path" sortable="custom">

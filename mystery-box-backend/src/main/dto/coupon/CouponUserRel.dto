@@ -1,0 +1,15 @@
+export io.github.qifan777.server.coupon.user.entity.CouponUserRel
+
+input CouponUserRelInput {
+    #allScalars(CouponUserRel)
+    id
+    id(coupon)
+    id(user)
+}
+
+specification CouponUserRelSpec {
+    #allScalars
+    id(creator)
+    id(coupon)
+    id(user)
+}

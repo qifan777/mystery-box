@@ -1,6 +1,6 @@
 
 {
-  "name": "uni-ai-admin",
+  "name": "mister-box-admin",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -18,11 +18,10 @@
     "@element-plus/icons-vue": "^2.3.1",
     "axios": "^1.6.4",
     "dayjs": "^1.11.10",
+    "element-china-area-data": "^6.1.0",
     "element-plus": "^2.4.2",
     "lodash": "^4.17.21",
-    "md-editor-v3": "^4.13.2",
     "pinia": "^2.1.7",
-    "sse.js": "^2.4.1",
     "vue": "^3.4.21",
     "vue-router": "^4.2.5"
   },

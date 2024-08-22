@@ -43,7 +43,7 @@ onMounted(() => {
         <div class="logo">
           <el-avatar :src="logo" :size="22"></el-avatar>
           <div class="separator"></div>
-          <span>UNI-AI</span>
+          <span>盲盒后台</span>
         </div>
         <div class="flex-grow"></div>
         <div class="username-wrapper" v-if="userInfo">

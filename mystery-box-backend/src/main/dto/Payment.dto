@@ -1,0 +1,18 @@
+export io.github.qifan777.server.payment.entity.Payment
+
+PaymentPriceView {
+  productAmount
+  couponAmount
+  deliveryFee
+  vipAmount
+  payAmount
+}
+input PaymentInput {
+    #allScalars(Payment)
+    id
+}
+
+specification PaymentSpec {
+    #allScalars
+    id(creator)
+}

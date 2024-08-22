@@ -1,0 +1,12 @@
+export io.github.qifan777.server.vip.level.entity.VipLevel
+
+input VipLevelInput {
+    #allScalars(VipLevel)
+    id
+}
+
+specification VipLevelSpec {
+    #allScalars
+    like/i(name)
+    id(creator)
+}

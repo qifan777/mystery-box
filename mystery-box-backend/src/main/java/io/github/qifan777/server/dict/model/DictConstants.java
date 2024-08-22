@@ -6,9 +6,10 @@ public class DictConstants {
   public static final String COUPON_TYPE = "COUPON_TYPE";
   public static final String PAY_TYPE = "PAY_TYPE";
   public static final String MENU_TYPE = "MENU_TYPE";
+  public static final String REFUND_STATUS = "REFUND_STATUS";
   public static final String PRODUCT_ORDER_STATUS = "PRODUCT_ORDER_STATUS";
   public static final String GENDER = "GENDER";
-  public static final String COUPON_SCOPE = "COUPON_SCOPE";
+  public static final String COUPON_SCOPE_TYPE = "COUPON_SCOPE_TYPE";
   public static final String COUPON_USE_STATUS = "COUPON_USE_STATUS";
   public static final String COUPON_RECEIVE_TYPE = "COUPON_RECEIVE_TYPE";
   public static final String NAVIGATOR_TYPE = "NAVIGATOR_TYPE";
@@ -58,13 +59,28 @@ public class DictConstants {
   }
   @Getter
   @AllArgsConstructor
+  public enum RefundStatus{
+        REFUNDING(0, "退款中", "REFUNDING", 1010, "退款状态", "REFUND_STATUS", 0),
+        SUCCESS(1, "退款成功", "SUCCESS", 1010, "退款状态", "REFUND_STATUS", 0),
+        FAILED(2, "退款失败", "FAILED", 1010, "退款状态", "REFUND_STATUS", 0),
+  ;
+  final int keyId;
+  final String keyName;
+  final String keyEnName;
+  final int dictId;
+  final String dictName;
+  final String dictEnName;
+  final int orderNum;
+  }
+  @Getter
+  @AllArgsConstructor
   public enum ProductOrderStatus{
         CLOSED(4, "已关闭", "CLOSED", 1003, "商品订单状态", "PRODUCT_ORDER_STATUS", 0),
-        REFUNDING(5, "退款中", "REFUNDING", 1003, "商品订单状态", "PRODUCT_ORDER_STATUS", 0),
+        REFUNDED(5, "已退款", "REFUNDED", 1003, "商品订单状态", "PRODUCT_ORDER_STATUS", 0),
         TO_BE_RECEIVED(2, "待收货", "TO_BE_RECEIVED", 1003, "商品订单状态", "PRODUCT_ORDER_STATUS", 0),
         TO_BE_PAID(0, "待付款", "TO_BE_PAID", 1003, "商品订单状态", "PRODUCT_ORDER_STATUS", 0),
         TO_BE_EVALUATED(3, "待评价", "TO_BE_EVALUATED", 1003, "商品订单状态", "PRODUCT_ORDER_STATUS", 0),
-        TO_BE_CREATE(6, "待创建", "TO_BE_CREATE", 1003, "商品订单状态", "PRODUCT_ORDER_STATUS", 0),
+        FINISHED(6, "已完成", "FINISHED", 1003, "商品订单状态", "PRODUCT_ORDER_STATUS", 0),
         TO_BE_DELIVERED(1, "待发货", "TO_BE_DELIVERED", 1003, "商品订单状态	", "PRODUCT_ORDER_STATUS", 0),
   ;
   final int keyId;
@@ -92,10 +108,10 @@ public class DictConstants {
   }
   @Getter
   @AllArgsConstructor
-  public enum CouponScope{
-        CATEGORY(2, "品类券", "CATEGORY", 1007, "优惠券使用范围", "COUPON_SCOPE", 0),
-        PRODUCT(1, "商品券", "PRODUCT", 1007, "优惠券使用范围", "COUPON_SCOPE", 0),
-        GENERAL(0, "通用券", "GENERAL", 1007, "优惠券使用范围", "COUPON_SCOPE", 0),
+  public enum CouponScopeType{
+        CATEGORY(2, "品类券", "CATEGORY", 1007, "优惠券使用范围", "COUPON_SCOPE_TYPE", 0),
+        PRODUCT(1, "商品券", "PRODUCT", 1007, "优惠券使用范围", "COUPON_SCOPE_TYPE", 0),
+        GENERAL(0, "通用券", "GENERAL", 1007, "优惠券使用范围", "COUPON_SCOPE_TYPE", 0),
   ;
   final int keyId;
   final String keyName;
@@ -152,6 +168,7 @@ public class DictConstants {
   public enum OrderType{
         BLIND_BOX_ORDER(1, "盲盒订单", "BLIND_BOX_ORDER", 1012, "订单类型", "ORDER_TYPE", 0),
         PRODUCT_ORDER(0, "商品订单", "PRODUCT_ORDER", 1012, "订单类型", "ORDER_TYPE", 0),
+        VIP_ORDER(2, "VIP订单", "VIP_ORDER", 1012, "订单类型", "ORDER_TYPE", 0),
   ;
   final int keyId;
   final String keyName;

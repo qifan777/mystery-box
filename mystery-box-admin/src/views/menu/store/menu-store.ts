@@ -9,7 +9,13 @@ import type { MenuTreeDto } from '@/typings'
 
 export const useMenuStore = defineStore('menu', () => {
   const initQuery: MenuSpec = {}
-  const initForm: MenuInput = { menuType: 'DIRECTORY', name: '', path: '', visible: true }
+  const initForm: MenuInput = {
+    menuType: 'DIRECTORY',
+    name: '',
+    path: '',
+    visible: true,
+    orderNum: 0
+  }
   const tableHelper = useTableHelper(api.menuController.query, api.menuController, initQuery)
   const dialogHelper = useDialogHelper()
   const queryHelper = useQueryHelper<MenuSpec>(initQuery)
@@ -18,15 +24,15 @@ export const useMenuStore = defineStore('menu', () => {
   return { ...tableHelper, ...dialogHelper, ...queryHelper, updateForm, createForm, initForm }
 })
 export const buildMenuTree = (
-  parentId: string | null,
   menus: MenuTreeDto[],
+  parentId?: string,
   filter?: (menu: MenuTreeDto) => boolean
 ) => {
   const children: MenuTreeDto[] = []
   menus.forEach((menu) => {
-    if (menu.parentId === parentId && (filter != null ? filter(menu) : true)) {
+    if (menu.parent?.id === parentId && (filter != null ? filter(menu) : true)) {
       children.push(menu)
-      const buildMenus = buildMenuTree(menu.id, menus, filter)
+      const buildMenus = buildMenuTree(menus, menu.id, filter)
       if (buildMenus.length > 0) {
         menu.children = buildMenus
       }
@@ -36,4 +42,7 @@ export const buildMenuTree = (
     return (a.orderNum || 99999) - (b.orderNum || 99999)
   })
   return children
+}
+export const menuQueryOptions = async (keyword: string, id: string) => {
+  return (await api.menuController.query({ body: { query: { name: keyword, id: id } } })).content
 }

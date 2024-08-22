@@ -21,7 +21,7 @@ export const useHomeStore = defineStore('home', () => {
     // 缓存菜单列表
     menuList.value = res
     // 递归生成菜单树
-    menuTreeList.value = buildMenuTree(null, res)
+    menuTreeList.value = buildMenuTree(res)
     return res
   }
   const init = async () => {

@@ -1,0 +1,31 @@
+export io.github.qifan777.server.box.order.entity.MysteryBoxOrder
+
+input MysteryBoxOrderInput {
+    #allScalars(MysteryBoxOrder)
+    id?
+    items{
+        mysteryBoxId
+        mysteryBoxCount
+    }
+    baseOrder{
+        remark
+        id(couponUser)
+        addressId: String
+    }
+    -status
+}
+
+specification MysteryBoxOrderSpec {
+    #allScalars
+    flat(creator) {
+        id as creatorId
+        phone
+    }
+    flat(baseOrder) {
+        like(remark)
+        flat(payment) {
+            ge(payTime)
+            le(payTime)
+        }
+    }
+}

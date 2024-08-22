@@ -49,16 +49,21 @@
         ></image>
         <div class="name">商品订单</div>
       </div>
-      <div
-        class="function"
-        @tap="switchPage('/pages/handicraft/handicraft-order-list')"
-      >
+      <div class="function" @tap="switchPage('/pages/box/box-order-list')">
         <image
           class="icon"
           mode="widthFix"
           src="@/assets/icons/gift-active.png"
         ></image>
         <div class="name">盲盒订单</div>
+      </div>
+      <div class="function" @tap="switchPage('/pages/vip/index')">
+        <image
+          class="icon"
+          mode="widthFix"
+          src="@/assets/icons/vip.png"
+        ></image>
+        <div class="name">会员权益</div>
       </div>
     </div>
     <div class="divider">

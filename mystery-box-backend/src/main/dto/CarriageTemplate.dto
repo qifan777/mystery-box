@@ -1,0 +1,12 @@
+export io.github.qifan777.server.carriage.entity.CarriageTemplate
+
+input CarriageTemplateInput {
+    #allScalars(CarriageTemplate)
+    id
+}
+
+specification CarriageTemplateSpec {
+    #allScalars
+    like/i(name)
+    id(creator)
+}

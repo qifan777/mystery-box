@@ -1,11 +1,10 @@
 <script lang="tsx">
 import { defineComponent, h, resolveComponent } from 'vue'
-import { ElIcon, ElMenu, ElMenuItem, ElSubMenu, ElPopover } from 'element-plus'
+import { ElIcon, ElMenu, ElMenuItem, ElPopover, ElSubMenu } from 'element-plus'
 import { useHomeStore } from '@/stores/home-store'
 import type { MenuTreeDto } from '@/typings'
-import { useRoute } from 'vue-router'
-import router from '@/router'
 import { useTagStore } from '@/layout/store/tag-store'
+
 export default defineComponent({
   components: {},
   props: {
@@ -89,6 +88,7 @@ export default defineComponent({
   }
   &:hover {
     color: #3692eb;
+
     .el-icon {
       svg {
         :deep(path) {
@@ -98,11 +98,13 @@ export default defineComponent({
     }
   }
 }
+
 @mixin item-active {
   background-image: linear-gradient(to left, #5fc3ff, #4a47ff);
   color: white;
   .el-icon {
     color: white;
+
     svg {
       :deep(path) {
         fill: white !important;
@@ -110,15 +112,18 @@ export default defineComponent({
     }
   }
 }
+
 @mixin item-basic {
   height: 32px;
   line-height: 32px;
   margin-top: 20px;
   border-radius: 25px;
 }
+
 :deep(.el-sub-menu__title) {
   @include item-color;
 }
+
 .el-menu-item {
   @include item-color;
 }
@@ -136,8 +141,10 @@ export default defineComponent({
       height: 42px;
       line-height: 42px;
       position: relative;
+
       &.is-active {
         color: #3692eb;
+
         &::before {
           content: '';
           position: absolute;
@@ -150,9 +157,11 @@ export default defineComponent({
       }
     }
   }
+
   .root {
     &.el-menu-item {
       @include item-basic;
+
       &.is-active {
         @include item-active;
       }
@@ -163,6 +172,7 @@ export default defineComponent({
         margin-bottom: 10px;
         @include item-basic;
       }
+
       &.is-active {
         :deep(.el-sub-menu__title) {
           @include item-active;
@@ -170,12 +180,15 @@ export default defineComponent({
       }
     }
   }
+
   &.el-menu--collapse {
     width: 40px;
+
     .el-menu-item {
       padding: 8px;
       width: 40px;
     }
+
     :deep(.el-sub-menu__title) {
       padding: 8px;
       width: 40px;

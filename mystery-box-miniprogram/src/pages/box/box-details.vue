@@ -20,11 +20,13 @@ const handleProductClick = (product: Product) => {
   activeProduct.value = product;
   dialogVisible.value = true;
 };
-const count = ref(1);
-const createOrderVisible = ref(false);
-const handleCreateOrder = (value) => {
-  count.value = value;
-  createOrderVisible.value = true;
+const handleCreateOrder = (count: number) => {
+  Taro.navigateTo({
+    url: "./box-order-create",
+    success() {
+      Taro.eventCenter.trigger("items", [{ box: box.value, count }]);
+    },
+  });
 };
 Taro.showShareMenu({
   withShareTicket: true,
@@ -193,22 +195,23 @@ page {
       background-size: contain;
     }
   }
-  .description {
-    margin-bottom: 150px;
-    div {
-      margin: 10px 0;
-      padding: 10px;
-      background-color: rgba(black, 0.1);
-      border-radius: 10px;
-    }
-  }
   .details {
     .product {
+      padding: 30px;
       margin-top: 50px;
       background-color: white;
       .cover {
         width: 100%;
       }
+    }
+  }
+  .description {
+    padding-bottom: 150px;
+    div {
+      margin: 10px 0;
+      padding: 10px;
+      background-color: rgba(black, 0.1);
+      border-radius: 10px;
     }
   }
 }

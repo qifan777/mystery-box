@@ -21,8 +21,10 @@ const rules = reactive<FormRules<typeof updateForm>>({
 })
 const init = async () => {
   dialogData.value.title = '编辑'
+  const res = await api.menuController.findById({ id: updateForm.value.id || '' })
   updateForm.value = {
-    ...(await api.menuController.findById({ id: updateForm.value.id || '' }))
+    ...res,
+    parentId: res.parent?.id
   }
 }
 watch(

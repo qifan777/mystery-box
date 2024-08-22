@@ -8,7 +8,7 @@
     </image>
     <div class="coupon-info">
       <div class="coupon-price">
-        <div class="price" v-if="couponUser.coupon.type == 'REDUCE'">
+        <div class="price" v-if="couponUser.coupon.couponType == 'REDUCE'">
           <span class="prefix">￥</span
           ><span>
             {{ couponUser.coupon.amount }}
@@ -29,8 +29,8 @@
       <div class="coupon-details">
         <div class="description">
           <dict-column
-            :dict-id="DictConstants.COUPON_SCOPE"
-            :value="couponUser.coupon.scope"
+            :dict-id="DictConstants.COUPON_SCOPE_TYPE"
+            :value="couponUser.coupon.scopeType"
           ></dict-column>
         </div>
         <div class="valid-time">
@@ -39,7 +39,18 @@
         </div>
       </div>
       <div class="use">
-        <nut-button type="primary" size="mini" @click="chooseCoupon(couponUser)"
+        <nut-button
+          type="warning"
+          size="mini"
+          @click="chooseCoupon()"
+          v-if="active"
+          >取消使用</nut-button
+        >
+        <nut-button
+          type="primary"
+          size="mini"
+          @click="chooseCoupon(couponUser)"
+          v-else
           >立即使用</nut-button
         >
       </div>
@@ -48,19 +59,19 @@
 </template>
 
 <script setup lang="ts">
-import { CouponUserDto } from "@/apis/__generated/model/dto";
+import { CouponUserRelDto } from "@/apis/__generated/model/dto";
 import dayjs from "dayjs";
 import { DictConstants } from "@/apis/__generated/model/enums/DictConstants";
-
+type CouponUserRel =
+  CouponUserRelDto["CouponUserRelRepository/COMPLEX_FETCHER_FOR_FRONT"];
 defineProps<{
-  couponUser: CouponUserDto["CouponUserRepository/COMPLEX_FETCHER"];
+  couponUser: CouponUserRel;
+  active?: boolean;
 }>();
 const emit = defineEmits<{
-  use: [couponUser: CouponUserDto["CouponUserRepository/COMPLEX_FETCHER"]];
+  use: [couponUser?: CouponUserRel];
 }>();
-const chooseCoupon = (
-  couponUser: CouponUserDto["CouponUserRepository/COMPLEX_FETCHER"],
-) => {
+const chooseCoupon = (couponUser?: CouponUserRel) => {
   emit("use", couponUser);
 };
 </script>

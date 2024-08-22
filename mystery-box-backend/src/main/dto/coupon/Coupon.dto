@@ -1,0 +1,20 @@
+export io.github.qifan777.server.coupon.root.entity.Coupon
+
+input CouponInput {
+    #allScalars(Coupon)
+    id
+}
+input CouponGiftInput{
+    id!
+    userIds: Array<String>
+}
+
+specification CouponSpec {
+    #allScalars
+    like/i(name)
+    ge(effectiveDate)
+    le(effectiveDate)
+    ge(expirationDate)
+    le(expirationDate)
+    id(creator)
+}

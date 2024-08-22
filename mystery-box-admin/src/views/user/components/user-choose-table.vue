@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, toRefs } from 'vue'
+import { inject, onMounted } from 'vue'
 import { api } from '@/utils/api-instance'
 import type { Scope } from '@/typings'
 import type { UserDto } from '@/apis/__generated/model/dto'
@@ -11,6 +11,10 @@ import DictSelect from '@/components/dict/dict-select.vue'
 
 type UserScope = Scope<UserDto['UserRepository/COMPLEX_FETCHER_FOR_ADMIN']>
 const initQuery: UserSpec = {}
+const tableHelper = inject(
+  'userTableHelper',
+  useTableHelper(api.userForAdminController.query, api.userForAdminController, initQuery)
+)
 const {
   reloadTableData,
   loading,
@@ -18,16 +22,9 @@ const {
   handleSelectChange,
   handleSortChange,
   loadTableData,
-  queryRequest,
-  getTableSelectedRows
-} = useTableHelper(api.userForAdminController.query, api.userForAdminController, initQuery)
-const { queryData, restQuery } = useQueryHelper(initQuery)
-const { query } = toRefs(queryData.value)
-onMounted(() => {
-  reloadTableData()
-})
-
-defineExpose({ getTableSelectedRows })
+  queryRequest
+} = tableHelper
+const { query, restQuery } = useQueryHelper(initQuery)
 </script>
 <template>
   <div>

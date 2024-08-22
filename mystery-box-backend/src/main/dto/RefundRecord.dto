@@ -1,0 +1,11 @@
+export io.github.qifan777.server.refund.entity.RefundRecord
+
+input RefundRecordInput {
+    #allScalars(RefundRecord)
+    id
+}
+
+specification RefundRecordSpec {
+    #allScalars
+    id(creator)
+}
