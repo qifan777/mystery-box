@@ -37,7 +37,7 @@ Taro.useLoad(() => {
         }}
       </div>
       <div class="buttons">
-        <div class="button" @click="switchPage('./vip-level-list')">
+        <div class="button" @click="switchPage('./vip-package-list')">
           <div class="title-wrapper">
             <image src="@/assets/icons/vip-one-active.png"></image>
             <div class="title">续费VIP会员</div>

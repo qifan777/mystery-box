@@ -5,7 +5,7 @@ import io.github.qifan777.server.infrastructure.model.QueryRequest;
 import io.github.qifan777.server.order.entity.BaseOrderFetcher;
 import io.github.qifan777.server.payment.entity.PaymentFetcher;
 import io.github.qifan777.server.user.root.entity.UserFetcher;
-import io.github.qifan777.server.vip.level.entity.VipLevelFetcher;
+import io.github.qifan777.server.vip.pack.entity.VipPackageFetcher;
 import io.github.qifan777.server.vip.order.entity.VipOrder;
 import io.github.qifan777.server.vip.order.entity.VipOrderFetcher;
 import io.github.qifan777.server.vip.order.entity.VipOrderTable;
@@ -25,7 +25,7 @@ public interface VipOrderRepository extends JRepository<VipOrder, String> {
                     .creator()
                     .couponUser(CouponUserRelFetcher.$.allScalarFields())
                     .payment(PaymentFetcher.$.allScalarFields()))
-            .vipLevel(VipLevelFetcher.$.allScalarFields())
+            .vipPackage(VipPackageFetcher.$.allScalarFields())
             .user(UserFetcher.$.phone().nickname())
             .creator(UserFetcher.$.phone().nickname())
             .editor(UserFetcher.$.phone().nickname());
@@ -35,7 +35,7 @@ public interface VipOrderRepository extends JRepository<VipOrder, String> {
                     .creator()
                     .couponUser(CouponUserRelFetcher.$.allScalarFields())
                     .payment(PaymentFetcher.$.allScalarFields()))
-            .vipLevel(VipLevelFetcher.$.allScalarFields())
+            .vipPackage(VipPackageFetcher.$.allScalarFields())
             .user(UserFetcher.$.phone().nickname())
             .creator(true);
 

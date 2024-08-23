@@ -1,6 +1,6 @@
-package io.github.qifan777.server.vip.level.service;
+package io.github.qifan777.server.vip.pack.service;
 
-import io.github.qifan777.server.vip.level.repository.VipLevelRepository;
+import io.github.qifan777.server.vip.pack.repository.VipPackageRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @AllArgsConstructor
 @Transactional
-public class VipLevelService {
-    private final VipLevelRepository vipLevelRepository;
+public class VipPackageService {
+    private final VipPackageRepository vipPackageRepository;
 
 }

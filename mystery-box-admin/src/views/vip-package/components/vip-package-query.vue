@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import type { VipLevelSpec } from '@/apis/__generated/model/static'
+import type { VipPackageSpec } from '@/apis/__generated/model/static'
 
-const emit = defineEmits<{ search: [value: VipLevelSpec]; reset: [] }>()
-const query = defineModel<VipLevelSpec>('query', { required: true })
+const emit = defineEmits<{ search: [value: VipPackageSpec]; reset: [] }>()
+const query = defineModel<VipPackageSpec>('query', { required: true })
 </script>
 <template>
   <div class="search">
     <el-form inline label-width="80" size="small">
-      <el-form-item label="等级名称">
+      <el-form-item label="套餐名称">
         <el-input v-model.trim="query.name"></el-input>
       </el-form-item>
       <el-form-item label=" ">

@@ -1,0 +1,12 @@
+export io.github.qifan777.server.vip.pack.entity.VipPackage
+
+input VipPackageInput {
+    #allScalars(VipPackage)
+    id
+}
+
+specification VipPackageSpec {
+    #allScalars
+    like/i(name)
+    id(creator)
+}

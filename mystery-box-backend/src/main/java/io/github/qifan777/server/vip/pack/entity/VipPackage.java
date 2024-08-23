@@ -1,4 +1,4 @@
-package io.github.qifan777.server.vip.level.entity;
+package io.github.qifan777.server.vip.pack.entity;
 
 import io.github.qifan777.server.infrastructure.jimmer.BaseEntity;
 import io.qifan.infrastructure.generator.core.GenEntity;
@@ -9,16 +9,16 @@ import org.babyfish.jimmer.sql.Entity;
 import java.math.BigDecimal;
 
 /**
- * Vip等级
+ * Vip套餐
  */
 @GenEntity
 @Entity
-public interface VipLevel extends BaseEntity {
+public interface VipPackage extends BaseEntity {
 
     /**
-     * 等级名称
+     * 套餐名称
      */
-    @GenTextField(label = "等级名称", order = 0)
+    @GenTextField(label = "套餐名称", order = 0)
     String name();
 
     /**

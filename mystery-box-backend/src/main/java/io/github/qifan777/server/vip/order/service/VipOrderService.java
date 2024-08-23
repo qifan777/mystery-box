@@ -11,8 +11,8 @@ import io.github.qifan777.server.payment.entity.Payment;
 import io.github.qifan777.server.payment.entity.PaymentDraft;
 import io.github.qifan777.server.payment.model.WeChatPayModel;
 import io.github.qifan777.server.payment.service.WeChatPayService;
-import io.github.qifan777.server.vip.level.entity.VipLevel;
-import io.github.qifan777.server.vip.level.repository.VipLevelRepository;
+import io.github.qifan777.server.vip.pack.entity.VipPackage;
+import io.github.qifan777.server.vip.pack.repository.VipPackageRepository;
 import io.github.qifan777.server.vip.order.entity.VipOrder;
 import io.github.qifan777.server.vip.order.entity.VipOrderDraft;
 import io.github.qifan777.server.vip.order.entity.dto.VipOrderInput;
@@ -37,7 +37,7 @@ import java.time.LocalDateTime;
 @Transactional
 public class VipOrderService {
     private final VipOrderRepository vipOrderRepository;
-    private final VipLevelRepository vipLevelRepository;
+    private final VipPackageRepository vipPackageRepository;
     private final WeChatPayService weChatPayService;
     private final VipRepository vipRepository;
     private final WxPayService wxPayService;
@@ -55,8 +55,8 @@ public class VipOrderService {
     }
 
     public WxPayUnifiedOrderV3Result.JsapiResult save(VipOrderInput vipOrderInput) {
-        VipLevel vipLevel = vipLevelRepository.findById(vipOrderInput.getVipLevelId()).orElseThrow(() -> new BusinessException(ResultCode.NotFindError));
-        Payment payment = this.initPayment(vipLevel.price());
+        VipPackage vipPackage = vipPackageRepository.findById(vipOrderInput.getVipPackageId()).orElseThrow(() -> new BusinessException(ResultCode.NotFindError));
+        Payment payment = this.initPayment(vipPackage.price());
         String orderId = IdUtil.fastSimpleUUID();
         VipOrder produce = VipOrderDraft.$.produce(vipOrderInput.toEntity(),draft -> {
             draft.setId(orderId)
@@ -64,7 +64,7 @@ public class VipOrderService {
             draft.applyBaseOrder(baseOrderDraft -> {
                 baseOrderDraft.setId(orderId)
                         .setPayment(payment)
-                        .setRemark("userId:" + StpUtil.getLoginIdAsString() + ";vipLevelId:" + vipLevel.id())
+                        .setRemark("userId:" + StpUtil.getLoginIdAsString() + ";vipPackageId:" + vipPackage.id())
                         .setType(DictConstants.OrderType.VIP_ORDER)
                 ;
             });
@@ -93,7 +93,7 @@ public class VipOrderService {
                         }));
         vipRepository.save(VipDraft.$.produce(vip, draft -> {
             LocalDateTime endTime = LocalDateTime.now().isAfter(vip.endTime()) ? LocalDateTime.now() : vip.endTime();
-            draft.setEndTime(endTime.plusDays(vipOrder.vipLevel().days()));
+            draft.setEndTime(endTime.plusDays(vipOrder.vipPackage().days()));
         }));
         // 更新支付信息
         return vipOrderRepository.save(VipOrderDraft.$.produce(vipOrder, draft -> draft.baseOrder().payment().setPayTime(LocalDateTime.now()).setTradeNo(outTradeNo))).id();

@@ -93,12 +93,12 @@ const router = createRouter({
           }
         },
         {
-          path: '/vip-level',
-          component: () => import('@/views/vip-level/vip-level-view.vue')
+          path: '/vip-package',
+          component: () => import('@/views/vip-package/vip-package-view.vue')
         },
         {
-          path: '/vip-level-details',
-          component: () => import('@/views/vip-level/vip-level-details-view.vue'),
+          path: '/vip-package-details',
+          component: () => import('@/views/vip-package/vip-package-details-view.vue'),
           props(to) {
             return { id: to.query.id }
           }

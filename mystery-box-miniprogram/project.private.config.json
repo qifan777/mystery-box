@@ -72,8 +72,8 @@
           "scene": null
         },
         {
-          "name": "vip等级列表",
-          "pathName": "pages/vip/vip-level-list",
+          "name": "vip套餐列表",
+          "pathName": "pages/vip/vip-package-list",
           "query": "",
           "launchMode": "default",
           "scene": null

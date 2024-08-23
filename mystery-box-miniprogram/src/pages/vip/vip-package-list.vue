@@ -1,8 +1,8 @@
 <template>
-  <div class="vip-level-page">
-    <div class="vip-level-list">
+  <div class="vip-package-page">
+    <div class="vip-package-list">
       <div
-        :class="['vip-level', level.id == active ? 'active' : '']"
+        :class="['vip-package', level.id == active ? 'active' : '']"
         v-for="level in pageData.content"
         :key="level.id"
         @click="active = level.id"
@@ -28,8 +28,8 @@ import { ref } from "vue";
 import Taro from "@tarojs/taro";
 
 const { pageData, reloadPageData } = usePageHelper(
-  api.vipLevelForFrontController.query,
-  api.vipLevelForFrontController,
+  api.vipPackageForFrontController.query,
+  api.vipPackageForFrontController,
   {
     pageNum: 1,
     pageSize: 1000,
@@ -46,7 +46,7 @@ const handleSubmit = () => {
   api.vipOrderForFrontController
     .save({
       body: {
-        vipLevelId: active.value,
+        vipPackageId: active.value,
       },
     })
     .then((res) => {
@@ -76,8 +76,8 @@ const handleSubmit = () => {
 page {
   background-color: rgba(black, 0.05);
 }
-.vip-level-page {
-  .vip-level-list {
+.vip-package-page {
+  .vip-package-list {
     padding: 20px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -85,7 +85,7 @@ page {
     grid-row-gap: 40px;
     justify-content: space-around;
 
-    .vip-level {
+    .vip-package {
       background-color: white;
       padding: 20px 10px;
       display: flex;

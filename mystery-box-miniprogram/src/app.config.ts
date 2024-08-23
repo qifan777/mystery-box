@@ -9,7 +9,7 @@ export default defineAppConfig({
     "pages/box/box-order-details",
     "pages/box/box-order-create",
     "pages/vip/index",
-    "pages/vip/vip-level-list",
+    "pages/vip/vip-package-list",
     "pages/coupon/index",
     "pages/coupon/coupon-available-list",
     "pages/address/address-list",

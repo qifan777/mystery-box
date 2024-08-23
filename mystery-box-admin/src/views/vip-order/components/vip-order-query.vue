@@ -2,7 +2,7 @@
 import RemoteSelect from '@/components/base/form/remote-select.vue'
 import type { VipOrderSpec } from '@/apis/__generated/model/static'
 import { userLabelProp, userQueryOptions } from '@/views/user/store/user-store'
-import { vipLevelQueryOptions } from '@/views/vip-level/vip-level'
+import { vipPackageQueryOptions } from '@/views/vip-package/vip-package'
 
 const emit = defineEmits<{ search: [value: VipOrderSpec]; reset: [] }>()
 const query = defineModel<VipOrderSpec>('query', { required: true })
@@ -20,8 +20,8 @@ const query = defineModel<VipOrderSpec>('query', { required: true })
       <el-form-item label="vip套餐">
         <remote-select
           label-prop="name"
-          :query-options="vipLevelQueryOptions"
-          v-model="query.vipLevelId"
+          :query-options="vipPackageQueryOptions"
+          v-model="query.vipPackageId"
         ></remote-select>
       </el-form-item>
       <el-form-item label=" ">

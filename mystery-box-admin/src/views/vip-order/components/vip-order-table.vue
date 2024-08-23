@@ -43,13 +43,13 @@ onMounted(() => {
       </el-table-column>
       <el-table-column
         label="vip套餐"
-        prop="vipLevel"
+        prop="vipPackage"
         sortable="custom"
         show-overflow-tooltip
         width="120"
       >
         <template v-slot:default="{ row }: VipOrderScope">
-          {{ row.vipLevel.name }}
+          {{ row.vipPackage.name }}
         </template>
       </el-table-column>
       <el-table-column label="实付金额" prop="payAmount" sortable="custom">

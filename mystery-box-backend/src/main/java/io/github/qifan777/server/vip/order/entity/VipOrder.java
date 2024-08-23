@@ -3,7 +3,7 @@ package io.github.qifan777.server.vip.order.entity;
 import io.github.qifan777.server.infrastructure.jimmer.BaseEntity;
 import io.github.qifan777.server.order.entity.BaseOrder;
 import io.github.qifan777.server.user.root.entity.User;
-import io.github.qifan777.server.vip.level.entity.VipLevel;
+import io.github.qifan777.server.vip.pack.entity.VipPackage;
 import io.qifan.infrastructure.generator.core.GenAssociationField;
 import io.qifan.infrastructure.generator.core.GenEntity;
 import org.babyfish.jimmer.sql.Entity;
@@ -24,11 +24,11 @@ public interface VipOrder extends BaseEntity {
     User user();
 
     /**
-     * vip等级id
+     * vip套餐id
      */
-    @GenAssociationField(label = "vip等级")
+    @GenAssociationField(label = "vip套餐")
     @ManyToOne
-    VipLevel vipLevel();
+    VipPackage vipPackage();
 
     /**
      * 订单id

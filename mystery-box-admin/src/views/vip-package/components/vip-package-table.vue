@@ -4,16 +4,16 @@ import { assertSuccess } from '@/utils/common'
 import { api } from '@/utils/api-instance'
 import { ElMessageBox } from 'element-plus'
 import type { Scope } from '@/typings'
-import type { VipLevelDto } from '@/apis/__generated/model/dto'
+import type { VipPackageDto } from '@/apis/__generated/model/dto'
 import { Delete, Edit, Plus } from '@element-plus/icons-vue'
 import { useTableHelper } from '@/components/base/table/table-helper'
 import { useTagStore } from '@/layout/store/tag-store'
 
 const tagStore = useTagStore()
-type VipLevelScope = Scope<VipLevelDto['VipLevelRepository/COMPLEX_FETCHER_FOR_ADMIN']>
-const vipLevelTableHelper = inject(
-  'vipLevelTableHelper',
-  useTableHelper(api.vipLevelForAdminController.query, api.vipLevelForAdminController, {})
+type VipPackageScope = Scope<VipPackageDto['VipPackageRepository/COMPLEX_FETCHER_FOR_ADMIN']>
+const vipPackageTableHelper = inject(
+  'vipPackageTableHelper',
+  useTableHelper(api.vipPackageForAdminController.query, api.vipPackageForAdminController, {})
 )
 const {
   loadTableData,
@@ -25,13 +25,13 @@ const {
   loading,
   queryRequest,
   table
-} = vipLevelTableHelper
+} = vipPackageTableHelper
 onMounted(() => {
   reloadTableData()
 })
 const handleEdit = (row: { id: string }) => {
   tagStore.openTag({
-    path: '/vip-level-details',
+    path: '/vip-package-details',
     query: {
       id: row.id
     }
@@ -39,7 +39,7 @@ const handleEdit = (row: { id: string }) => {
 }
 const handleCreate = () => {
   tagStore.openTag({
-    path: '/vip-level-details'
+    path: '/vip-package-details'
   })
 }
 const handleSingleDelete = (row: { id: string }) => {
@@ -58,7 +58,7 @@ const handleDelete = (ids: string[]) => {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    api.vipLevelForAdminController.delete({ body: ids }).then((res) => {
+    api.vipPackageForAdminController.delete({ body: ids }).then((res) => {
       assertSuccess(res).then(() => reloadTableData())
     })
   })
@@ -90,13 +90,13 @@ const handleDelete = (ids: string[]) => {
     >
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column
-        label="等级名称"
+        label="套餐名称"
         prop="name"
         sortable="custom"
         show-overflow-tooltip
         width="120"
       >
-        <template v-slot:default="{ row }: VipLevelScope">
+        <template v-slot:default="{ row }: VipPackageScope">
           {{ row.name }}
         </template>
       </el-table-column>
@@ -107,12 +107,12 @@ const handleDelete = (ids: string[]) => {
         show-overflow-tooltip
         width="120"
       >
-        <template v-slot:default="{ row }: VipLevelScope">
+        <template v-slot:default="{ row }: VipPackageScope">
           {{ row.price }}
         </template>
       </el-table-column>
       <el-table-column label="天数" prop="days" sortable="custom" show-overflow-tooltip width="120">
-        <template v-slot:default="{ row }: VipLevelScope">
+        <template v-slot:default="{ row }: VipPackageScope">
           {{ row.days }}
         </template>
       </el-table-column>
@@ -123,7 +123,7 @@ const handleDelete = (ids: string[]) => {
         show-overflow-tooltip
         width="150"
       >
-        <template v-slot:default="{ row }: VipLevelScope">
+        <template v-slot:default="{ row }: VipPackageScope">
           {{ row.createdTime }}
         </template>
       </el-table-column>
@@ -134,7 +134,7 @@ const handleDelete = (ids: string[]) => {
         show-overflow-tooltip
         width="150"
       >
-        <template v-slot:default="{ row }: VipLevelScope">
+        <template v-slot:default="{ row }: VipPackageScope">
           {{ row.editedTime }}
         </template>
       </el-table-column>
@@ -145,7 +145,7 @@ const handleDelete = (ids: string[]) => {
         show-overflow-tooltip
         width="150"
       >
-        <template v-slot:default="{ row }: VipLevelScope">
+        <template v-slot:default="{ row }: VipPackageScope">
           {{ row.creator.nickname }}({{ row.creator.phone }})
         </template>
       </el-table-column>
@@ -156,7 +156,7 @@ const handleDelete = (ids: string[]) => {
         show-overflow-tooltip
         width="150"
       >
-        <template v-slot:default="{ row }: VipLevelScope">
+        <template v-slot:default="{ row }: VipPackageScope">
           {{ row.editor.nickname }}({{ row.editor.phone }})
         </template>
       </el-table-column>
@@ -193,8 +193,8 @@ const handleDelete = (ids: string[]) => {
         background
         small
         layout="prev, pager, next, jumper, total, sizes"
-        @current-change="(pageNum) => loadTableData({ pageNum })"
-        @size-change="(pageSize) => loadTableData({ pageSize })"
+        @current-change="(pageNum: number) => loadTableData({ pageNum })"
+        @size-change="(pageSize: number) => loadTableData({ pageSize })"
       />
     </div>
   </div>
