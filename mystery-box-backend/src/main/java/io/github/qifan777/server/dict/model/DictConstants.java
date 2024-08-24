@@ -13,6 +13,7 @@ public class DictConstants {
   public static final String COUPON_USE_STATUS = "COUPON_USE_STATUS";
   public static final String COUPON_RECEIVE_TYPE = "COUPON_RECEIVE_TYPE";
   public static final String NAVIGATOR_TYPE = "NAVIGATOR_TYPE";
+  public static final String QUALITY_TYPE = "QUALITY_TYPE";
   public static final String ORDER_TYPE = "ORDER_TYPE";
   public static final String USER_STATUS = "USER_STATUS";
   @Getter
@@ -154,6 +155,21 @@ public class DictConstants {
   public enum NavigatorType{
         PRODUCT(0, "商品", "PRODUCT", 1013, "跳转类型", "NAVIGATOR_TYPE", 0),
         BLIND_BOX(1, "盲盒", "BLIND_BOX", 1013, "跳转类型", "NAVIGATOR_TYPE", 0),
+  ;
+  final int keyId;
+  final String keyName;
+  final String keyEnName;
+  final int dictId;
+  final String dictName;
+  final String dictEnName;
+  final int orderNum;
+  }
+  @Getter
+  @AllArgsConstructor
+  public enum QualityType{
+        GENERAL(0, "普通款", "GENERAL", 1014, "商品品质", "QUALITY_TYPE", 0),
+        HIDDEN(1, "隐藏款", "HIDDEN", 1014, "商品品质", "QUALITY_TYPE", 0),
+        LEGENDARY(2, "超神款", "LEGENDARY", 1014, "商品品质", "QUALITY_TYPE", 0),
   ;
   final int keyId;
   final String keyName;

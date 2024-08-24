@@ -8,6 +8,8 @@ import type { ProductDto } from '@/apis/__generated/model/dto'
 import { Delete, Edit, Plus } from '@element-plus/icons-vue'
 import { useTableHelper } from '@/components/base/table/table-helper'
 import { useTagStore } from '@/layout/store/tag-store'
+import DictColumn from '@/components/dict/dict-column.vue'
+import { DictConstants } from '@/apis/__generated/model/enums/DictConstants'
 type Product = ProductDto['ProductRepository/COMPLEX_FETCHER_FOR_ADMIN']
 const tagStore = useTagStore()
 type ProductScope = Scope<Product>
@@ -166,16 +168,27 @@ const handleDelete = (ids: string[]) => {
         </template>
       </el-table-column>
       <el-table-column
-        label="属性"
-        prop="attributes"
+        label="品质"
+        prop="qualityType"
         sortable="custom"
         show-overflow-tooltip
         width="120"
       >
         <template v-slot:default="{ row }: ProductScope">
-          {{ row.attributes }}
+          <dict-column :dict-id="DictConstants.QUALITY_TYPE" :value="row.qualityType" />
         </template>
       </el-table-column>
+      <!--      <el-table-column-->
+      <!--        label="属性"-->
+      <!--        prop="attributes"-->
+      <!--        sortable="custom"-->
+      <!--        show-overflow-tooltip-->
+      <!--        width="120"-->
+      <!--      >-->
+      <!--        <template v-slot:default="{ row }: ProductScope">-->
+      <!--          {{ row.attributes }}-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
       <el-table-column
         label="创建时间"
         prop="createdTime"

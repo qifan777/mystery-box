@@ -2,6 +2,8 @@
 import RemoteSelect from '@/components/base/form/remote-select.vue'
 import type { ProductSpec } from '@/apis/__generated/model/static'
 import { productCategoryQueryOptions } from '@/views/product-category/product-category'
+import DictSelect from '@/components/dict/dict-select.vue'
+import { DictConstants } from '@/apis/__generated/model/enums/DictConstants'
 
 const emit = defineEmits<{ search: [value: ProductSpec]; rest: [] }>()
 const query = defineModel<ProductSpec>('query', { required: true })
@@ -11,9 +13,6 @@ const query = defineModel<ProductSpec>('query', { required: true })
     <el-form inline label-width="80" size="small">
       <el-form-item label="名称">
         <el-input v-model.trim="query.name"></el-input>
-      </el-form-item>
-      <el-form-item label="价格">
-        <el-input-number v-model="query.price" controls-position="right"></el-input-number>
       </el-form-item>
       <el-form-item label="品牌">
         <el-input v-model.trim="query.brand"></el-input>
@@ -28,9 +27,12 @@ const query = defineModel<ProductSpec>('query', { required: true })
       <el-form-item label="描述">
         <el-input v-model.trim="query.description"></el-input>
       </el-form-item>
-      <el-form-item label="标签"> </el-form-item>
-      <el-form-item label="规格"> </el-form-item>
-      <el-form-item label="属性"> </el-form-item>
+      <el-form-item label="品质">
+        <dict-select
+          :dict-id="DictConstants.QUALITY_TYPE"
+          v-model="query.qualityType"
+        ></dict-select>
+      </el-form-item>
       <el-form-item label=" ">
         <div class="btn-wrapper">
           <el-button type="primary" size="small" @click="() => emit('search', query)">

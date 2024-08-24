@@ -1,10 +1,14 @@
 package io.github.qifan777.server.product.root.entity;
 
-import io.qifan.infrastructure.generator.core.*;
+import io.github.qifan777.server.dict.model.DictConstants;
 import io.github.qifan777.server.infrastructure.jimmer.BaseEntity;
 import io.github.qifan777.server.product.category.entity.ProductCategory;
 import io.github.qifan777.server.product.root.model.KeyValue;
-import org.babyfish.jimmer.sql.*;
+import io.qifan.infrastructure.generator.core.*;
+import org.babyfish.jimmer.sql.Entity;
+import org.babyfish.jimmer.sql.IdView;
+import org.babyfish.jimmer.sql.ManyToOne;
+import org.babyfish.jimmer.sql.Serialized;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -71,10 +75,16 @@ public interface Product extends BaseEntity {
     List<KeyValue> specifications();
 
     /**
+     * 品质
+     */
+    @GenDictField(label = "品质", order = 8)
+    DictConstants.QualityType qualityType();
+
+    /**
      * 属性
      */
     @Serialized
-    @GenKeyValueField(label = "属性", order = 8)
+    @GenKeyValueField(label = "属性", order = 9)
     List<KeyValue> attributes();
 }
 

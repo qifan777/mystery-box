@@ -46,7 +46,7 @@
         </product-row>
         <div class="products">
           <product-row
-            v-for="product in item.mysteryBox.products"
+            v-for="product in item.products"
             :key="product.id"
             :product="product"
           />
@@ -82,8 +82,8 @@
     </nut-cell-group>
     <div class="buttons-wrapper" v-if="order.status === 'TO_BE_PAID'">
       <div class="buttons">
-        <nut-button @click="handleCancel"> 取消订单 </nut-button>
-        <nut-button type="primary" @click="handlePay"
+        <nut-button @click="handleCancel(order.id)"> 取消订单 </nut-button>
+        <nut-button type="primary" @click="handlePay(order.id)"
           >立即支付 ￥{{ order.baseOrder.payment.payAmount }}
         </nut-button>
       </div>

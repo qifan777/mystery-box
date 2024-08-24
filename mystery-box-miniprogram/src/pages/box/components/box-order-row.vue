@@ -31,7 +31,7 @@ defineProps<{
             <image
               :src="product.cover"
               mode="aspectFill"
-              v-for="product in item.mysteryBox.products"
+              v-for="product in item.products"
               :key="product.id"
             ></image>
           </div>

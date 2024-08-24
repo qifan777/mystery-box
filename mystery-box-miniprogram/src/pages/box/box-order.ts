@@ -1,6 +1,12 @@
 import { api } from "@/utils/api-instance";
 import Taro from "@tarojs/taro";
-export const handleTrackingDetails = (trackingNumber: string) => {
+export const handleTrackingDetails = (trackingNumber?: string) => {
+  if (!trackingNumber) {
+    return Taro.showToast({
+      title: "暂无物流信息",
+      icon: "none",
+    });
+  }
   Taro.navigateToMiniProgram({
     appId: "wx6885acbedba59c14",
     path: `pages/result/result?nu=${trackingNumber}&com=&querysource=third_xcx`,

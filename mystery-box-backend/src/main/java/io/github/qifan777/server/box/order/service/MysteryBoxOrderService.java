@@ -2,6 +2,7 @@ package io.github.qifan777.server.box.order.service;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.RandomUtil;
 import com.github.binarywang.wxpay.bean.notify.SignatureHeader;
 import com.github.binarywang.wxpay.bean.notify.WxPayNotifyV3Result;
 import com.github.binarywang.wxpay.bean.notify.WxPayRefundNotifyV3Result;
@@ -14,11 +15,13 @@ import io.github.qifan777.server.Objects;
 import io.github.qifan777.server.Tables;
 import io.github.qifan777.server.address.entity.dto.AddressView;
 import io.github.qifan777.server.address.repository.AddressRepository;
+import io.github.qifan777.server.box.item.entity.MysteryBoxOrderItemTable;
 import io.github.qifan777.server.box.order.entity.MysteryBoxOrder;
 import io.github.qifan777.server.box.order.entity.MysteryBoxOrderTable;
 import io.github.qifan777.server.box.order.entity.dto.MysteryBoxOrderInput;
 import io.github.qifan777.server.box.order.repository.MysteryBoxOrderRepository;
 import io.github.qifan777.server.box.root.entity.MysteryBox;
+import io.github.qifan777.server.box.root.entity.MysteryBoxFetcher;
 import io.github.qifan777.server.box.root.entity.dto.MystryBoxView;
 import io.github.qifan777.server.box.root.repository.MysteryBoxRepository;
 import io.github.qifan777.server.carriage.repository.CarriageTemplateRepository;
@@ -33,6 +36,9 @@ import io.github.qifan777.server.payment.entity.PaymentTable;
 import io.github.qifan777.server.payment.entity.dto.PaymentPriceView;
 import io.github.qifan777.server.payment.model.WeChatPayModel;
 import io.github.qifan777.server.payment.service.WeChatPayService;
+import io.github.qifan777.server.product.root.entity.Product;
+import io.github.qifan777.server.product.root.entity.ProductFetcher;
+import io.github.qifan777.server.product.root.entity.dto.ProductVIew;
 import io.github.qifan777.server.refund.entity.RefundRecord;
 import io.github.qifan777.server.refund.entity.RefundRecordDraft;
 import io.github.qifan777.server.refund.repository.RefundRecordRepository;
@@ -48,6 +54,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -66,6 +74,9 @@ public class MysteryBoxOrderService {
     private final WxPayPropertiesExtension wxPayPropertiesExtension;
     private final CarriageTemplateService carriageTemplateService;
     private final MysteryBoxRepository mysteryBoxRepository;
+    private final int[] LEGENDARY_RANGE = new int[]{0, 12};
+    private final int[] HIDDEN_RANGE = new int[]{13, 758};
+    private final int[] GENERAL_RANGE = new int[]{759, 9999};
 
     public String create(MysteryBoxOrderInput mysteryBoxOrderInput) {
         String orderId = IdUtil.fastSimpleUUID();
@@ -170,6 +181,39 @@ public class MysteryBoxOrderService {
                 () -> new BusinessException(ResultCode.NotFindError, "订单不存在"));
         // 设置微信支付订单id
         StpUtil.switchTo(mysteryBoxOrder.creator().id());
+        mysteryBoxOrder.items().stream().forEach(mysteryBoxOrderItem -> {
+            MysteryBox mysteryBox = mysteryBoxRepository.findById(mysteryBoxOrderItem.mysteryBoxId(),
+                            MysteryBoxFetcher.$.products(ProductFetcher.$.allTableFields()))
+                    .orElseThrow(() -> new BusinessException(ResultCode.NotFindError, "盲盒不存在"));
+            List<Product> legendaryList = mysteryBox.products().stream().filter(product -> product.qualityType().equals(DictConstants.QualityType.LEGENDARY)).toList();
+            List<Product> hiddenList = mysteryBox.products().stream().filter(product -> product.qualityType().equals(DictConstants.QualityType.HIDDEN)).toList();
+            List<Product> generalList = mysteryBox.products().stream().filter(product -> product.qualityType().equals(DictConstants.QualityType.GENERAL)).toList();
+            int legendaryCount = 0;
+            int hiddenCount = 0;
+            int generalCount = 0;
+            for (int i = 0; i < mysteryBoxOrderItem.mysteryBoxCount(); i++) {
+                int randomInt = RandomUtil.randomInt(0, 10000);
+                if (randomInt >= LEGENDARY_RANGE[0] && randomInt <= LEGENDARY_RANGE[1]) {
+                    legendaryCount++;
+                }
+                if (randomInt >= HIDDEN_RANGE[0] && randomInt <= HIDDEN_RANGE[1]) {
+                    hiddenCount++;
+                }
+                if (randomInt >= GENERAL_RANGE[0] && randomInt <= GENERAL_RANGE[1]) {
+                    generalCount++;
+                }
+            }
+            List<Product> products = new ArrayList<>();
+            products.addAll(RandomUtil.randomEleList(legendaryList, legendaryCount));
+            products.addAll(RandomUtil.randomEleList(hiddenList, hiddenCount));
+            products.addAll(RandomUtil.randomEleList(generalList, generalCount));
+            MysteryBoxOrderItemTable t = MysteryBoxOrderItemTable.$;
+            jSqlClient.createUpdate(t)
+                    .set(t.products(), products.stream().map(ProductVIew::new).toList())
+                    .where(t.id().eq(mysteryBoxOrderItem.id()))
+                    .execute();
+        });
+
         PaymentTable t1 = PaymentTable.$;
         jSqlClient.createUpdate(t1)
                 .where(t1.baseOrder().id().eq(mysteryBoxOrder.id()))
@@ -282,5 +326,9 @@ public class MysteryBoxOrderService {
         if (!mysteryBoxOrder.creator().id().equals(StpUtil.getLoginIdAsString())) {
             throw new BusinessException(ResultCode.ParamSetIllegal, "非本人操作");
         }
+    }
+
+    public CarriageTemplateRepository getCarriageTemplateRepository() {
+        return carriageTemplateRepository;
     }
 }

@@ -33,7 +33,7 @@
               type="success"
               plain
               v-if="order.status == 'TO_BE_RECEIVED'"
-              @click="handleTrackingDetails"
+              @click="handleTrackingDetails(order.baseOrder.trackingNumber)"
               >查看物流</nut-button
             >
           </box-order-row>
@@ -55,6 +55,7 @@ import {
   boxWeChatPay,
   handleTrackingDetails,
 } from "@/pages/box/box-order";
+import Taro from "@tarojs/taro";
 const { TO_BE_PAID, TO_BE_DELIVERED, TO_BE_RECEIVED, CLOSED } =
   Dictionaries.ProductOrderStatus;
 const tabList = [TO_BE_PAID, TO_BE_DELIVERED, TO_BE_RECEIVED, CLOSED];
@@ -66,10 +67,14 @@ const { pageData, reloadPageData } = usePageHelper(
   api.mysteryBoxOrderForFrontController.query,
   api.mysteryBoxOrderForFrontController,
   { pageNum: 1, pageSize: 10, query: { status: activeStatus.value } },
+  { enableLoad: false },
 );
-
+Taro.useDidShow(() => {
+  reloadPageData();
+});
 const handleCancel = async (id: string) => {
   await boxOrderCancel(id);
+  await reloadPageData();
 };
 const handlePay = async (id: string) => {
   await boxWeChatPay(id);

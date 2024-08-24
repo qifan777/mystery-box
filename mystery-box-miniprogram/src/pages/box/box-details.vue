@@ -57,9 +57,9 @@ Taro.showShareMenu({
         <div
           :class="[
             'product',
-            product.tags[0] == '超神款' ? 'supper' : '',
-            product.tags[0] == '隐藏款' ? 'middle' : '',
-            product.tags[0] == '普通款' ? 'ordinary' : '',
+            product.qualityType == 'LEGENDARY' ? 'legendary' : '',
+            product.qualityType == 'HIDDEN' ? 'hidden' : '',
+            product.qualityType == 'GENERAL' ? 'general' : '',
           ]"
           v-for="product in box.products"
           :key="product.id"
@@ -157,13 +157,13 @@ page {
       }
     }
 
-    .supper {
-      background-image: url("../../assets/icons/super-style.png");
+    .legendary {
+      background-image: url("../../assets/icons/legendary-style.png");
       background-repeat: no-repeat;
       background-size: contain;
 
       .background-text {
-        background-image: url("../../assets/icons/super-text.png");
+        background-image: url("../../assets/icons/legendary-star.png");
         background-repeat: no-repeat;
         background-size: contain;
         width: 200px;
@@ -173,13 +173,13 @@ page {
       }
     }
 
-    .middle {
-      background-image: url("../../assets/icons/middle-style.png");
+    .hidden {
+      background-image: url("../../assets/icons/hidden-style.png");
       background-repeat: no-repeat;
       background-size: contain;
 
       .background-text {
-        background-image: url("../../assets/icons/middle-text.png");
+        background-image: url("../../assets/icons/hidden-star.png");
         background-repeat: no-repeat;
         background-size: contain;
         width: 200px;
@@ -189,8 +189,8 @@ page {
       }
     }
 
-    .ordinary {
-      background-image: url("../../assets/icons/ordinary-style.png");
+    .general {
+      background-image: url("../../assets/icons/general-style.png");
       background-repeat: no-repeat;
       background-size: contain;
     }

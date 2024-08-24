@@ -178,8 +178,8 @@ onMounted(() => {
         background
         small
         layout="prev, pager, next, jumper, total, sizes"
-        @current-change="(pageNum) => loadTableData({ pageNum })"
-        @size-change="(pageSize) => loadTableData({ pageSize })"
+        @current-change="(pageNum: number) => loadTableData({ pageNum })"
+        @size-change="(pageSize: number) => loadTableData({ pageSize })"
       />
     </div>
   </div>

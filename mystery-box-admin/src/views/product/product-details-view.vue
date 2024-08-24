@@ -10,6 +10,8 @@ import { assertFormValidate } from '@/utils/common'
 import { api } from '@/utils/api-instance'
 import { useFormHelper } from '@/components/base/form/form-helper'
 import { productCategoryQueryOptions } from '@/views/product-category/product-category'
+import DictSelect from '@/components/dict/dict-select.vue'
+import { DictConstants } from '@/apis/__generated/model/enums/DictConstants'
 
 const props = defineProps<{ id?: string }>()
 const formRef = ref<FormInstance>()
@@ -32,8 +34,9 @@ const rules = reactive<FormRules<ProductInput>>({
   brand: [{ required: true, message: '请输入品牌', trigger: 'blur' }],
   categoryId: [{ required: true, message: '请输入类别', trigger: 'blur' }],
   description: [{ required: true, message: '请输入描述', trigger: 'blur' }],
-  tags: [{ required: true, message: '请输入标签', trigger: 'blur' }],
-  specifications: [{ required: true, message: '请输入规格', trigger: 'blur' }]
+  // tags: [{ required: true, message: '请输入标签', trigger: 'blur' }],
+  specifications: [{ required: true, message: '请输入规格', trigger: 'blur' }],
+  qualityType: [{ required: true, message: '请输入品质', trigger: 'change' }]
   // attributes: [{ required: true, message: '请输入属性', trigger: 'blur' }]
 })
 const handleConfirm = () => {
@@ -82,15 +85,18 @@ onActivated(() => {
       <el-form-item label="描述" prop="description">
         <el-input v-model="form.description" type="textarea"></el-input>
       </el-form-item>
-      <el-form-item label="标签" prop="tags">
-        <value-input v-model="form.tags"></value-input>
+      <el-form-item label="品质" prop="qualityType">
+        <dict-select :dict-id="DictConstants.QUALITY_TYPE" v-model="form.qualityType"></dict-select>
       </el-form-item>
       <el-form-item label="规格" prop="specifications">
         <key-value-input v-model="form.specifications"></key-value-input>
       </el-form-item>
-      <el-form-item label="属性" prop="attributes">
-        <key-value-input v-model="form.attributes"></key-value-input>
+      <el-form-item label="标签" prop="tags">
+        <value-input v-model="form.tags"></value-input>
       </el-form-item>
+      <!--      <el-form-item label="属性" prop="attributes">-->
+      <!--        <key-value-input v-model="form.attributes"></key-value-input>-->
+      <!--      </el-form-item>-->
     </el-form>
     <el-row justify="center">
       <el-button type="primary" @click="handleConfirm">提交</el-button>
