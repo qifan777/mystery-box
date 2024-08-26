@@ -1,0 +1,13 @@
+export io.github.qifan777.server.box.category.entity.MysteryBoxCategory
+
+input MysteryBoxCategoryInput {
+    #allScalars(MysteryBoxCategory)
+    id
+}
+
+specification MysteryBoxCategorySpec {
+    #allScalars
+    like/i(name)
+    like/i(description)
+    id(creator)
+}

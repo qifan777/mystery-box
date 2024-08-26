@@ -1,5 +1,6 @@
 package io.github.qifan777.server.box.root.repository;
 
+import io.github.qifan777.server.box.category.entity.MysteryBoxCategoryFetcher;
 import io.github.qifan777.server.box.root.entity.MysteryBox;
 import io.github.qifan777.server.box.root.entity.MysteryBoxFetcher;
 import io.github.qifan777.server.box.root.entity.MysteryBoxTable;
@@ -18,6 +19,7 @@ public interface MysteryBoxRepository extends JRepository<MysteryBox, String> {
     MysteryBoxTable t = MysteryBoxTable.$;
     MysteryBoxFetcher COMPLEX_FETCHER_FOR_ADMIN = MysteryBoxFetcher.$.allScalarFields()
             .products(ProductRepository.COMPLEX_FETCHER_FOR_ADMIN)
+            .category(MysteryBoxCategoryFetcher.$.name())
             .creator(UserFetcher.$.phone().nickname())
             .editor(UserFetcher.$.phone().nickname());
     MysteryBoxFetcher COMPLEX_FETCHER_FOR_FRONT = MysteryBoxFetcher.$.allScalarFields()

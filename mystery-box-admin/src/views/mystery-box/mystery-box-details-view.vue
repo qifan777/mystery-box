@@ -10,6 +10,8 @@ import { useTableHelper } from '@/components/base/table/table-helper'
 import type { MysteryBoxDto } from '@/apis/__generated/model/dto'
 import SelectedProduct from '@/views/mystery-box/components/selected-product.vue'
 import UnselectedProduct from '@/views/mystery-box/components/unselected-product.vue'
+import { mysteryBoxCategoryQueryOptions } from '@/views/mystery-box-category/mystery-box-category'
+import RemoteSelect from '@/components/base/form/remote-select.vue'
 const props = defineProps<{ id?: string }>()
 
 let productTableHelper = useTableHelper(
@@ -25,7 +27,8 @@ const initForm: MysteryBoxInput = {
   details: '',
   name: '',
   price: 0,
-  tips: ''
+  tips: '',
+  categoryId: ''
 }
 const box = ref<MysteryBoxDto['MysteryBoxRepository/COMPLEX_FETCHER_FOR_ADMIN']>()
 const { formData: form, restForm } = useFormHelper<MysteryBoxInput>(initForm)
@@ -34,7 +37,8 @@ const rules = reactive<FormRules<MysteryBoxInput>>({
   details: [{ required: true, message: '请输入盲盒详情', trigger: 'blur' }],
   tips: [{ required: true, message: '请输入购买提示', trigger: 'blur' }],
   price: [{ required: true, message: '请输入价格', trigger: 'blur' }],
-  cover: [{ required: true, message: '请输入封面', trigger: 'blur' }]
+  cover: [{ required: true, message: '请输入封面', trigger: 'blur' }],
+  categoryId: [{ required: true, message: '请选择分类', trigger: 'change' }]
 })
 const handleConfirm = () => {
   form.value.productIds = productTableHelper.getTableSelectedRows().map((row) => row.id)
@@ -54,7 +58,11 @@ const handleConfirm = () => {
 const init = () => {
   if (props.id) {
     api.mysteryBoxForAdminController.findById({ id: props.id }).then((res) => {
-      form.value = { ...res, productIds: res.products.map((row) => row.id) }
+      form.value = {
+        ...res,
+        productIds: res.products.map((row) => row.id),
+        categoryId: res.category.id
+      }
       box.value = res
     })
     productTableHelper.reloadTableData({ query: { boxId: props.id } })
@@ -85,6 +93,13 @@ const activeName = ref('selected')
       </el-form-item>
       <el-form-item label="封面" prop="cover">
         <image-upload v-model="form.cover"></image-upload>
+      </el-form-item>
+      <el-form-item label="类别" prop="categoryId">
+        <remote-select
+          label-prop="name"
+          :query-options="mysteryBoxCategoryQueryOptions"
+          v-model="form.categoryId"
+        ></remote-select>
       </el-form-item>
       <el-tabs v-model="activeName">
         <el-tab-pane name="selected" label="已选" v-if="box">

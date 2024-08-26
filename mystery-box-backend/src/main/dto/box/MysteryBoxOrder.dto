@@ -21,6 +21,7 @@ specification MysteryBoxOrderSpec {
         id as creatorId
         phone
     }
+    keyword: String?
     flat(baseOrder) {
         like(remark)
         flat(payment) {

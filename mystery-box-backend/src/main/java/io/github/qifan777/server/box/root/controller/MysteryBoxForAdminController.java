@@ -2,12 +2,12 @@ package io.github.qifan777.server.box.root.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.github.qifan777.server.Objects;
-import io.qifan.infrastructure.common.exception.BusinessException;
 import io.github.qifan777.server.box.root.entity.MysteryBox;
 import io.github.qifan777.server.box.root.entity.dto.MysteryBoxInput;
 import io.github.qifan777.server.box.root.entity.dto.MysteryBoxSpec;
 import io.github.qifan777.server.box.root.repository.MysteryBoxRepository;
 import io.github.qifan777.server.infrastructure.model.QueryRequest;
+import io.qifan.infrastructure.common.exception.BusinessException;
 import lombok.AllArgsConstructor;
 import org.babyfish.jimmer.client.FetchBy;
 import org.babyfish.jimmer.client.meta.DefaultFetcherOwner;
@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -42,6 +43,7 @@ public class MysteryBoxForAdminController {
     public String save(@RequestBody @Validated MysteryBoxInput mysteryBoxInput) {
         MysteryBox entity = mysteryBoxInput.toEntity();
         MysteryBox mysteryBox = Objects.createMysteryBox(entity, draft -> {
+            draft.setBoxRelList(new ArrayList<>());
             for (String productId : mysteryBoxInput.getProductIds()) {
                 draft.addIntoBoxRelList(relDraft -> {
                     relDraft.setMysteryBox(entity)

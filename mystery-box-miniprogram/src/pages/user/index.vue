@@ -41,21 +41,13 @@
       <div class="rear">MY SERVICE</div>
     </div>
     <div class="functions">
-      <div class="function" @tap="switchPage('/pages/order/order-list')">
+      <div class="function" @tap="switchPage('/pages/box/box-order-list')">
         <image
           class="icon"
           mode="widthFix"
           src="@/assets/icons/order.png"
         ></image>
-        <div class="name">商品订单</div>
-      </div>
-      <div class="function" @tap="switchPage('/pages/box/box-order-list')">
-        <image
-          class="icon"
-          mode="widthFix"
-          src="@/assets/icons/gift-active.png"
-        ></image>
-        <div class="name">盲盒订单</div>
+        <div class="name">我的订单</div>
       </div>
       <div class="function" @tap="switchPage('/pages/vip/index')">
         <image

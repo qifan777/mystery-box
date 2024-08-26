@@ -24,7 +24,6 @@ import io.github.qifan777.server.box.root.entity.MysteryBox;
 import io.github.qifan777.server.box.root.entity.MysteryBoxFetcher;
 import io.github.qifan777.server.box.root.entity.dto.MystryBoxView;
 import io.github.qifan777.server.box.root.repository.MysteryBoxRepository;
-import io.github.qifan777.server.carriage.repository.CarriageTemplateRepository;
 import io.github.qifan777.server.carriage.service.CarriageTemplateService;
 import io.github.qifan777.server.coupon.root.service.CouponService;
 import io.github.qifan777.server.dict.model.DictConstants;
@@ -66,7 +65,6 @@ public class MysteryBoxOrderService {
     private final MysteryBoxOrderRepository mysteryBoxOrderRepository;
     private final JSqlClient jSqlClient;
     private final AddressRepository addressRepository;
-    private final CarriageTemplateRepository carriageTemplateRepository;
     private final VipService vipService;
     private final CouponService couponService;
     private final WeChatPayService weChatPayService;
@@ -328,7 +326,4 @@ public class MysteryBoxOrderService {
         }
     }
 
-    public CarriageTemplateRepository getCarriageTemplateRepository() {
-        return carriageTemplateRepository;
-    }
 }

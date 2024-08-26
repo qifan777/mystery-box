@@ -60,6 +60,22 @@ const router = createRouter({
           }
         },
         {
+          path: '/mystery-box-order',
+          component: () => import('@/views/mystery-box-order/mystery-box-order-view.vue')
+        },
+        {
+          path: '/mystery-box-category',
+          component: () => import('@/views/mystery-box-category/mystery-box-category-view.vue')
+        },
+        {
+          path: '/mystery-box-category-details',
+          component: () =>
+            import('@/views/mystery-box-category/mystery-box-category-details-view.vue'),
+          props(to) {
+            return { id: to.query.id }
+          }
+        },
+        {
           path: '/slideshow',
           component: () => import('@/views/slideshow/slideshow-view.vue')
         },

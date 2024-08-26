@@ -4,16 +4,22 @@ import { assertSuccess } from '@/utils/common'
 import { api } from '@/utils/api-instance'
 import { ElMessageBox } from 'element-plus'
 import type { Scope } from '@/typings'
-import type { MysteryBoxDto } from '@/apis/__generated/model/dto'
+import type { MysteryBoxCategoryDto } from '@/apis/__generated/model/dto'
 import { Delete, Edit, Plus } from '@element-plus/icons-vue'
 import { useTableHelper } from '@/components/base/table/table-helper'
 import { useTagStore } from '@/layout/store/tag-store'
 
 const tagStore = useTagStore()
-type MysteryBoxScope = Scope<MysteryBoxDto['MysteryBoxRepository/COMPLEX_FETCHER_FOR_ADMIN']>
-const mysteryBoxTableHelper = inject(
-  'mysteryBoxTableHelper',
-  useTableHelper(api.mysteryBoxForAdminController.query, api.mysteryBoxForAdminController, {})
+type MysteryBoxCategoryScope = Scope<
+  MysteryBoxCategoryDto['MysteryBoxCategoryRepository/COMPLEX_FETCHER_FOR_ADMIN']
+>
+const mysteryBoxCategoryTableHelper = inject(
+  'mysteryBoxCategoryTableHelper',
+  useTableHelper(
+    api.mysteryBoxCategoryForAdminController.query,
+    api.mysteryBoxCategoryForAdminController,
+    {}
+  )
 )
 const {
   loadTableData,
@@ -25,13 +31,13 @@ const {
   loading,
   queryRequest,
   table
-} = mysteryBoxTableHelper
+} = mysteryBoxCategoryTableHelper
 onMounted(() => {
   reloadTableData()
 })
 const handleEdit = (row: { id: string }) => {
   tagStore.openTag({
-    path: '/mystery-box-details',
+    path: '/mystery-box-category-details',
     query: {
       id: row.id
     }
@@ -39,7 +45,7 @@ const handleEdit = (row: { id: string }) => {
 }
 const handleCreate = () => {
   tagStore.openTag({
-    path: '/mystery-box-details'
+    path: '/mystery-box-category-details'
   })
 }
 const handleSingleDelete = (row: { id: string }) => {
@@ -58,7 +64,7 @@ const handleDelete = (ids: string[]) => {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    api.mysteryBoxForAdminController.delete({ body: ids }).then((res) => {
+    api.mysteryBoxCategoryForAdminController.delete({ body: ids }).then((res) => {
       assertSuccess(res).then(() => reloadTableData())
     })
   })
@@ -89,75 +95,48 @@ const handleDelete = (ids: string[]) => {
       v-loading="loading"
     >
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column label="id" prop="id" sortable="custom" show-overflow-tooltip width="120">
-        <template v-slot:default="{ row }: MysteryBoxScope">
-          {{ row.id }}
-        </template>
-      </el-table-column>
       <el-table-column
-        label="盲盒名字"
+        label="类别名称"
         prop="name"
         sortable="custom"
         show-overflow-tooltip
         width="120"
       >
-        <template v-slot:default="{ row }: MysteryBoxScope">
+        <template v-slot:default="{ row }: MysteryBoxCategoryScope">
           {{ row.name }}
         </template>
       </el-table-column>
       <el-table-column
-        label="盲盒详情"
-        prop="details"
+        label="类别图标"
+        prop="icon"
         sortable="custom"
         show-overflow-tooltip
         width="120"
       >
-        <template v-slot:default="{ row }: MysteryBoxScope">
-          {{ row.details }}
+        <template v-slot:default="{ row }: MysteryBoxCategoryScope">
+          <el-avatar :src="row.icon" alt=""></el-avatar>
         </template>
       </el-table-column>
       <el-table-column
-        label="购买提示"
-        prop="tips"
+        label="描述"
+        prop="description"
         sortable="custom"
         show-overflow-tooltip
         width="120"
       >
-        <template v-slot:default="{ row }: MysteryBoxScope">
-          {{ row.tips }}
+        <template v-slot:default="{ row }: MysteryBoxCategoryScope">
+          {{ row.description }}
         </template>
       </el-table-column>
       <el-table-column
-        label="价格"
-        prop="price"
+        label="排序号"
+        prop="sortOrder"
         sortable="custom"
         show-overflow-tooltip
         width="120"
       >
-        <template v-slot:default="{ row }: MysteryBoxScope">
-          {{ row.price }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="封面"
-        prop="cover"
-        sortable="custom"
-        show-overflow-tooltip
-        width="120"
-      >
-        <template v-slot:default="{ row }: MysteryBoxScope">
-          <el-avatar :src="row.cover" alt=""></el-avatar>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="类别"
-        prop="category.name"
-        sortable="custom"
-        show-overflow-tooltip
-        width="120"
-      >
-        <template v-slot:default="{ row }: MysteryBoxScope">
-          {{ row.category.name }}
+        <template v-slot:default="{ row }: MysteryBoxCategoryScope">
+          {{ row.sortOrder }}
         </template>
       </el-table-column>
       <el-table-column
@@ -167,7 +146,7 @@ const handleDelete = (ids: string[]) => {
         show-overflow-tooltip
         width="150"
       >
-        <template v-slot:default="{ row }: MysteryBoxScope">
+        <template v-slot:default="{ row }: MysteryBoxCategoryScope">
           {{ row.createdTime }}
         </template>
       </el-table-column>
@@ -178,7 +157,7 @@ const handleDelete = (ids: string[]) => {
         show-overflow-tooltip
         width="150"
       >
-        <template v-slot:default="{ row }: MysteryBoxScope">
+        <template v-slot:default="{ row }: MysteryBoxCategoryScope">
           {{ row.editedTime }}
         </template>
       </el-table-column>
@@ -189,7 +168,7 @@ const handleDelete = (ids: string[]) => {
         show-overflow-tooltip
         width="150"
       >
-        <template v-slot:default="{ row }: MysteryBoxScope">
+        <template v-slot:default="{ row }: MysteryBoxCategoryScope">
           {{ row.creator.nickname }}({{ row.creator.phone }})
         </template>
       </el-table-column>
@@ -200,7 +179,7 @@ const handleDelete = (ids: string[]) => {
         show-overflow-tooltip
         width="150"
       >
-        <template v-slot:default="{ row }: MysteryBoxScope">
+        <template v-slot:default="{ row }: MysteryBoxCategoryScope">
           {{ row.editor.nickname }}({{ row.editor.phone }})
         </template>
       </el-table-column>
@@ -237,8 +216,8 @@ const handleDelete = (ids: string[]) => {
         background
         small
         layout="prev, pager, next, jumper, total, sizes"
-        @current-change="(pageNum: number) => loadTableData({ pageNum })"
-        @size-change="(pageSize: number) => loadTableData({ pageSize })"
+        @current-change="(pageNum) => loadTableData({ pageNum })"
+        @size-change="(pageSize) => loadTableData({ pageSize })"
       />
     </div>
   </div>

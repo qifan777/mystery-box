@@ -16,9 +16,11 @@ import io.github.qifan777.server.user.root.entity.UserFetcher;
 import org.babyfish.jimmer.spring.repository.JRepository;
 import org.babyfish.jimmer.spring.repository.SpringOrders;
 import org.babyfish.jimmer.spring.repository.support.SpringPageFactory;
+import org.babyfish.jimmer.sql.ast.Expression;
 import org.babyfish.jimmer.sql.fetcher.Fetcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -45,6 +47,9 @@ public interface MysteryBoxOrderRepository extends JRepository<MysteryBoxOrder, 
         Pageable pageable = queryRequest.toPageable();
         return sql().createQuery(t)
                 .where(query)
+                .whereIf(StringUtils.hasText(query.getKeyword()), t.items(ex -> Expression.string()
+                        .sql("%e", it -> it.expression(ex.mysteryBox()))
+                        .ilikeIf(StringUtils.hasText(query.getKeyword()), query.getKeyword())))
                 .orderBy(SpringOrders.toOrders(t, pageable.getSort()))
                 .select(t.fetch(fetcher))
                 .fetchPage(queryRequest.getPageNum() - 1, queryRequest.getPageSize(),

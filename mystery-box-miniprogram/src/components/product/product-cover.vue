@@ -23,6 +23,7 @@
     <div class="price-cart" @click.stop="emit('add')">
       <div class="price">￥{{ product.price }}</div>
       <image
+        v-if="showCart"
         class="cart"
         src="@/assets/icons/shopping-cart-one-active.png"
       ></image>
@@ -40,6 +41,7 @@ withDefaults(
       tags?: string[];
     };
     width?: string;
+    showCart?: boolean;
   }>(),
   { width: "100%" },
 );

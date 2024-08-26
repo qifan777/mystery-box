@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { MysteryBoxDto } from "@/apis/__generated/model/dto";
 import Taro from "@tarojs/taro";
 import { api } from "@/utils/api-instance";
+import { Dictionaries } from "@/apis/__generated/model/enums/DictConstants";
 type Product =
   MysteryBoxDto["MysteryBoxRepository/COMPLEX_FETCHER_FOR_FRONT"]["products"][0];
 const box =
@@ -13,6 +14,7 @@ Taro.useLoad((ops) => {
     res.products = res.products.sort((a, b) => a.price - b.price);
     box.value = res;
   });
+  marginTop.value = Taro.getMenuButtonBoundingClientRect().top + "px";
 });
 const dialogVisible = ref(false);
 const activeProduct = ref<Product>();
@@ -32,6 +34,7 @@ Taro.showShareMenu({
   withShareTicket: true,
   showShareItems: ["wechatFriends", "wechatMoment"],
 });
+const marginTop = ref("0");
 </script>
 
 <template>
@@ -41,7 +44,7 @@ Taro.showShareMenu({
       v-model:visible="dialogVisible"
       :product="activeProduct"
     ></product-dialog>
-    <div class="box-details" v-if="box">
+    <scroll-view class="box-details" :scroll-y="true" v-if="box">
       <div class="box-info">
         <div class="name">{{ box.name }}</div>
         <div class="probability">
@@ -69,10 +72,13 @@ Taro.showShareMenu({
           <div class="background-text"></div>
         </div>
       </div>
-      <nut-divider>商品介绍</nut-divider>
+      <nut-divider class="divider">商品介绍</nut-divider>
       <div class="details">
         <div class="product" v-for="product in box.products" :key="product.id">
-          <div class="row">{{ product.tags[0] }}: {{ product.name }}</div>
+          <div class="row">
+            {{ Dictionaries["QualityType"][product.qualityType].keyName }} :
+            {{ product.name }}
+          </div>
           <div
             class="row"
             v-for="spec in product.specifications"
@@ -84,13 +90,13 @@ Taro.showShareMenu({
           <image class="cover" :src="product.cover" mode="widthFix"></image>
         </div>
       </div>
-      <nut-divider>购买说明</nut-divider>
+      <nut-divider class="divider">购买说明</nut-divider>
       <div class="description">
-        <div>【普通款】：概率为【0.13%】</div>
+        <div>【超神款】：概率为【0.13%】</div>
         <div>【隐藏款】：概率为【7.46%】</div>
-        <div>【超神款】：概率为【92.41%】</div>
+        <div>【普通款】：概率为【92.41%】</div>
       </div>
-    </div>
+    </scroll-view>
     <div class="box-bar" v-if="box">
       <div class="buttons">
         <div class="single button" @click="handleCreateOrder(1)">
@@ -111,10 +117,18 @@ page {
 }
 
 .box-details {
+  box-sizing: border-box;
+  height: 100vh;
+  background-size: cover;
+  background: url("../../assets/images/background.jpg") top no-repeat;
+  padding-top: v-bind(marginTop);
+  .divider {
+    color: rgba(black, 0.5);
+  }
   .box-info {
     padding: 30px;
-    background-color: white;
     .name {
+      color: white;
       font-size: 32px;
       margin-bottom: 20px;
     }
@@ -130,7 +144,7 @@ page {
       .value {
         margin-left: 20px;
         font-size: 28px;
-        background-color: rgba(black, 0.1);
+        background-color: rgba(white, 0.1);
         padding: 7px 20px;
         border-radius: 9999px;
         color: rgba(red, 0.6);
@@ -140,13 +154,13 @@ page {
 
   .product-list {
     padding: 30px;
-    background-color: white;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-column-gap: 42px;
+    grid-row-gap: 40px;
+    justify-content: center;
     .product {
-      height: 340px;
+      height: 300px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -185,7 +199,6 @@ page {
         width: 200px;
         height: 66px;
         background-position: 50%;
-        margin-top: 10px;
       }
     }
 
@@ -198,20 +211,24 @@ page {
   .details {
     .product {
       padding: 30px;
-      margin-top: 50px;
-      background-color: white;
+      margin: 50px 20px 20px;
+      border-radius: 20px;
+      background-color: rgba(white, 0.4);
       .cover {
         width: 100%;
+      }
+      .row {
+        display: flex;
+        padding: 10px 0;
+        color: rgba(black, 0.6);
       }
     }
   }
   .description {
     padding-bottom: 150px;
     div {
-      margin: 10px 0;
-      padding: 10px;
-      background-color: rgba(black, 0.1);
-      border-radius: 10px;
+      padding: 20px;
+      background-color: white;
     }
   }
 }

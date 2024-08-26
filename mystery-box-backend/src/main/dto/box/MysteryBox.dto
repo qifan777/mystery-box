@@ -4,6 +4,7 @@ input MysteryBoxInput {
     #allScalars(MysteryBox)
     id
     productIds: Array<String>
+    id(category)
 }
 //MystryBoxView {
 //    #allScalars
@@ -14,4 +15,5 @@ specification MysteryBoxSpec {
     like/i(details)
     like/i(tips)
     id(creator)
+    id(category)
 }

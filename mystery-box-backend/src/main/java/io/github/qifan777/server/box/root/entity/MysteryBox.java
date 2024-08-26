@@ -1,11 +1,13 @@
 package io.github.qifan777.server.box.root.entity;
 
-import io.qifan.infrastructure.generator.core.*;
+import io.github.qifan777.server.box.category.entity.MysteryBoxCategory;
 import io.github.qifan777.server.box.product.entity.MysteryBoxProductRel;
 import io.github.qifan777.server.infrastructure.jimmer.BaseEntity;
 import io.github.qifan777.server.product.root.entity.Product;
+import io.qifan.infrastructure.generator.core.*;
 import org.babyfish.jimmer.sql.Entity;
 import org.babyfish.jimmer.sql.ManyToManyView;
+import org.babyfish.jimmer.sql.ManyToOne;
 import org.babyfish.jimmer.sql.OneToMany;
 
 import java.math.BigDecimal;
@@ -53,5 +55,8 @@ public interface MysteryBox extends BaseEntity {
 
     @ManyToManyView(prop = "boxRelList")
     List<Product> products();
+
+    @ManyToOne
+    MysteryBoxCategory category();
 }
 

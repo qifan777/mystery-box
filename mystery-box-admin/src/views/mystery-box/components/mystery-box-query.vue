@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import type { MysteryBoxSpec } from '@/apis/__generated/model/static'
+import RemoteSelect from '@/components/base/form/remote-select.vue'
+import { mysteryBoxCategoryQueryOptions } from '@/views/mystery-box-category/mystery-box-category'
 
 const emit = defineEmits<{ search: [value: MysteryBoxSpec]; rest: [] }>()
 const query = defineModel<MysteryBoxSpec>('query', { required: true })
@@ -15,6 +17,13 @@ const query = defineModel<MysteryBoxSpec>('query', { required: true })
       </el-form-item>
       <el-form-item label="购买提示">
         <el-input v-model.trim="query.tips"></el-input>
+      </el-form-item>
+      <el-form-item label="类别">
+        <remote-select
+          label-prop="name"
+          :query-options="mysteryBoxCategoryQueryOptions"
+          v-model="query.categoryId"
+        ></remote-select>
       </el-form-item>
       <el-form-item label="价格">
         <el-input-number v-model="query.price" controls-position="right"></el-input-number>
