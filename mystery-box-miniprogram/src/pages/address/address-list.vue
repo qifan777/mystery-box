@@ -4,23 +4,21 @@
       class="address"
       :key="address.id"
       :address="address"
-      v-for="address in addressList"
+      v-for="address in pageData.content"
       @longpress="showActionSheet(address)"
       @click="handleAddressChoose(address)"
     >
       <template #operation>
         <div class="operations">
-          <Del class="delete" @click="handleDelete(address.id)"></Del>
+          <del class="delete" @click="handleDelete(address.id)"></del>
           <edit
             class="edit"
-            @click.stop="
-              switchPage(`/pages/address/address-save?id=${address.id}`)
-            "
+            @click.stop="switchPage(`./address-save?id=${address.id}`)"
           ></edit>
         </div>
       </template>
     </address-row>
-    <div class="add-address" @click="switchPage('/pages/address/address-save')">
+    <div class="add-address" @click="switchPage('./address-save')">
       <div class="btn">
         <plus></plus>
         添加收货地址
@@ -43,21 +41,37 @@ import { Edit, Del, Plus } from "@nutui/icons-vue-taro";
 import { ref } from "vue";
 import { AddressDto } from "@/apis/__generated/model/dto";
 import { menuItems } from "@nutui/nutui-taro/dist/types/__VUE/actionsheet/index.taro.vue";
+import { usePageHelper } from "@/utils/page";
+// -----地址列表加载-----
 type Address = AddressDto["AddressRepository/COMPLEX_FETCHER_FOR_FRONT"];
-const addressList = ref<Address[]>([]);
-const loadData = () => {
-  api.addressForFrontController
-    .query({ body: { pageSize: 10000, pageNum: 1, query: {} } })
-    .then((res) => {
-      addressList.value = res.content;
-    });
+const { pageData, reloadPageData } = usePageHelper(
+  api.addressForFrontController.query,
+  api.addressForFrontController,
+  { pageSize: 10000, pageNum: 1, query: {} },
+  // 每次进入页面刷新数据（Taro.useDidShow），禁用首次进入页面刷新（Taro.useLoad），避免重复请求
+  { enableShowLoad: true, enableLoad: false },
+);
+// -----地址列表加载-----
+
+// -----地址删除操作-----
+const handleDelete = (id: string) => {
+  Taro.showModal({
+    title: "是否确认删除",
+    showCancel: true,
+    success: async ({ confirm }) => {
+      if (confirm) {
+        await api.addressForFrontController.delete({ body: [id] });
+        await reloadPageData();
+      }
+    },
+  });
 };
-Taro.useDidShow(() => {
-  loadData();
-});
+// -----地址删除操作-----
+
+// -----地址点击操作-----
 const isFromOrder = ref(false);
-Taro.useLoad((ops) => {
-  if (ops.from && ops.from === "order") {
+Taro.useLoad(({ from }) => {
+  if (from === "order") {
     isFromOrder.value = true;
   }
 });
@@ -70,52 +84,32 @@ const handleAddressChoose = (value: Address) => {
     });
   }
 };
-const handleDelete = (id: string) => {
-  Taro.showModal({
-    title: "是否确认删除",
-    showCancel: true,
-    success: ({ confirm }) => {
-      if (confirm) {
-        api.addressForFrontController.delete({ body: [id] }).then(() => {
-          loadData();
-        });
-      }
-    },
-  });
-};
-// 控制是否显示操作菜单
+// -----地址点击操作-----
+
+// -----长按地址显示菜单操作-----
 const show = ref(false);
-// 长按地址后这个值会变成目标地址
-const activeAddress = ref({} as Address);
-// 菜单项
-const actions = [{ name: "复制地址" }, { name: "设为默认" }] as menuItems[];
-// 菜单项对应的操作
-const actionMap = {
-  ["复制地址"]: () => {
-    // 复制地址到剪贴板
-    const address = activeAddress.value;
-    const value = `收件人：${address.realName}\n手机号码：${address.phoneNumber}\n详细地址：${address.details} ${address.houseNumber}`;
-    Taro.setClipboardData({ data: value });
-  },
-  ["设为默认"]: () => {
-    // 设置默认地址
-    api.addressForFrontController
-      .top({ id: activeAddress.value.id })
-      .then(() => {
-        loadData();
-      });
-  },
-};
-// 选择菜单后触发
-const handleActionChoose = (action: menuItems) => {
-  // 执行对应的操作
-  actionMap[action.name]();
-};
-// 长按地址后触发，显示
+const activeAddress = ref<Address>();
 const showActionSheet = (address: Address) => {
   activeAddress.value = address;
   show.value = true;
 };
+
+const actions = [{ name: "复制地址" }, { name: "设为默认" }] as menuItems[];
+// 菜单项对应的操作
+const actionMap = {
+  ["复制地址"]: (address: Address) => {
+    const value = `收件人：${address.realName}\n手机号码：${address.phoneNumber}\n详细地址：${address.details} ${address.houseNumber}`;
+    Taro.setClipboardData({ data: value });
+  },
+  ["设为默认"]: async (address: Address) => {
+    await api.addressForFrontController.top({ id: address.id });
+    await reloadPageData();
+  },
+};
+const handleActionChoose = (action: menuItems) => {
+  actionMap[action.name](activeAddress.value);
+};
+// -----长按地址显示菜单操作-----
 </script>
 
 <style lang="scss">

@@ -29,7 +29,7 @@ const emit = defineEmits<{
       round
       @update:visible="(value) => emit('update:visible', value)"
     >
-      <scroll-view class="product-scroll-view" :scroll-y="true">
+      <div class="product">
         <div>
           <div class="title">{{ product.name }}</div>
           <image
@@ -45,18 +45,9 @@ const emit = defineEmits<{
             <div class="row">
               <div class="label">参数:</div>
               <div class="value">
-                <scroll-view class="spec-scroll" :scroll-x="true">
-                  <div class="cell-list">
-                    <div
-                      class="cell"
-                      v-for="spec in product.specifications"
-                      :key="spec.name"
-                    >
-                      <div class="top">{{ spec.name }}</div>
-                      <div class="bottom">{{ spec.values.join(",") }}</div>
-                    </div>
-                  </div>
-                </scroll-view>
+                <specification-list
+                  :specs="product.specifications"
+                ></specification-list>
               </div>
             </div>
             <div class="row">
@@ -65,7 +56,7 @@ const emit = defineEmits<{
             </div>
           </div>
         </div>
-      </scroll-view>
+      </div>
     </nut-popup>
   </div>
 </template>
@@ -73,7 +64,7 @@ const emit = defineEmits<{
 <style lang="scss">
 @import "../../app.scss";
 .product-dialog {
-  .product-scroll-view {
+  .product {
     width: 650px;
     .title {
       margin: 30px;
@@ -101,31 +92,6 @@ const emit = defineEmits<{
         }
         .value {
           color: #ccc;
-          .spec-scroll {
-            width: 450px;
-            .cell-list {
-              display: flex;
-              align-items: center;
-              .cell {
-                flex-shrink: 0;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                padding: 10px 20px;
-                border-right: 1px solid rgba(white, 0.05);
-                .top {
-                  margin-bottom: 8px;
-                  color: #ccc;
-                }
-                .bottom {
-                  text-align: center;
-                  color: #999;
-                  @include text-max-line(1);
-                  max-width: 120px;
-                }
-              }
-            }
-          }
         }
       }
     }

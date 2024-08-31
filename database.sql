@@ -48,7 +48,7 @@ CREATE TABLE `address` (
 
 LOCK TABLES `address` WRITE;
 /*!40000 ALTER TABLE `address` DISABLE KEYS */;
-INSERT INTO `address` VALUES ('5443f7da984a4f61bc15b8702ec10af1','2024-03-14 10:33:42.068210','2024-03-14 10:33:42.068210','0f07d638f1bc401188d86dc650ab06a7','0f07d638f1bc401188d86dc650ab06a7',26.08144,119.328431,'福建省福州市晋安区福新中路128号晋安区机关大院2号楼7层','福建省','福州市','晋安区','13656987994','起凡','311',0),('916dd3b50a1c49349d53a1cd18ddcf41','2024-03-14 15:54:08.635695','2024-03-14 15:54:08.635695','ad9bff77beb342d091897e69e0a707dd','ad9bff77beb342d091897e69e0a707dd',26.08135,119.32842,'福建省福州市晋安区','福建省','福州市','晋安区','13656987994','起凡','1123',0),('a20c60c140dd4ac3b5bf29be6aba954d','2024-03-14 10:46:42.327846','2024-03-14 10:46:42.327846','c3a27b84683e4869a38d3c010a16386a','c3a27b84683e4869a38d3c010a16386a',26.08135,119.32842,'福建省福州市晋安区','福建省','福州市','晋安区','12345678901','起凡','311',0),('a2d7c173-3445-4498-8951-39d2cc3010b2','2024-01-25 15:30:58.465746','2024-01-25 18:25:59.037309','0f07d638-f1bc-4011-88d8-6dc650ab06a7','0f07d638-f1bc-4011-88d8-6dc650ab06a7',26.075455,119.33508,'福建省福州市晋安区五里亭立交桥与连江北路交叉口正南方向100米左右','福建省','福州市','晋安区','13666666666','起凡','1号楼',0),('ef42e042-b54b-4888-aad4-79905f2e49d7','2024-01-25 16:22:49.652859','2024-01-25 18:26:01.917410','0f07d638-f1bc-4011-88d8-6dc650ab06a7','0f07d638-f1bc-4011-88d8-6dc650ab06a7',26.051222,119.342255,'福建省福州市台江区江滨中大道366号','福建省','福州市','台江区','13666666666','起凡','501',1);
+INSERT INTO `address` VALUES ('1b2e26ac339342dba1b7527dd47b097d','2024-08-29 10:25:14.395388','2024-08-29 10:26:47.527299','0f07d638f1bc401188d86dc650ab06a7','0f07d638f1bc401188d86dc650ab06a7',26.081904,119.3271,'福建省福州市晋安区长乐北路127号','福建省','福州市','晋安区','13656987994','起凡','1',0),('5443f7da984a4f61bc15b8702ec10af1','2024-03-14 10:33:42.068210','2024-08-28 16:18:12.555620','0f07d638f1bc401188d86dc650ab06a7','0f07d638f1bc401188d86dc650ab06a7',26.08144,119.328431,'福建省福州市晋安区福新中路128号晋安区机关大院2号楼7层','福建省','福州市','晋安区','13656987994','起凡','3112',0),('916dd3b50a1c49349d53a1cd18ddcf41','2024-03-14 15:54:08.635695','2024-03-14 15:54:08.635695','ad9bff77beb342d091897e69e0a707dd','ad9bff77beb342d091897e69e0a707dd',26.08135,119.32842,'福建省福州市晋安区','福建省','福州市','晋安区','13656987994','起凡','1123',0),('a20c60c140dd4ac3b5bf29be6aba954d','2024-03-14 10:46:42.327846','2024-03-14 10:46:42.327846','c3a27b84683e4869a38d3c010a16386a','c3a27b84683e4869a38d3c010a16386a',26.08135,119.32842,'福建省福州市晋安区','福建省','福州市','晋安区','12345678901','起凡','311',0),('a2d7c173-3445-4498-8951-39d2cc3010b2','2024-01-25 15:30:58.465746','2024-01-25 18:25:59.037309','0f07d638-f1bc-4011-88d8-6dc650ab06a7','0f07d638-f1bc-4011-88d8-6dc650ab06a7',26.075455,119.33508,'福建省福州市晋安区五里亭立交桥与连江北路交叉口正南方向100米左右','福建省','福州市','晋安区','13666666666','起凡','1号楼',0),('ef42e042-b54b-4888-aad4-79905f2e49d7','2024-01-25 16:22:49.652859','2024-01-25 18:26:01.917410','0f07d638-f1bc-4011-88d8-6dc650ab06a7','0f07d638-f1bc-4011-88d8-6dc650ab06a7',26.051222,119.342255,'福建省福州市台江区江滨中大道366号','福建省','福州市','台江区','13666666666','起凡','501',1);
 /*!40000 ALTER TABLE `address` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -72,7 +72,7 @@ CREATE TABLE `base_order` (
   `coupon_user_id` varchar(36) DEFAULT NULL COMMENT '用户优惠券id',
   `type` varchar(32) NOT NULL COMMENT '订单类型',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='基础订单';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -81,7 +81,7 @@ CREATE TABLE `base_order` (
 
 LOCK TABLES `base_order` WRITE;
 /*!40000 ALTER TABLE `base_order` DISABLE KEYS */;
-INSERT INTO `base_order` VALUES ('be643f205d3d46b582e0b5285b4e5e33','2024-08-24 10:25:07.666664','2024-08-24 10:25:07.666664','0f07d638f1bc401188d86dc650ab06a7','0f07d638f1bc401188d86dc650ab06a7','be643f205d3d46b582e0b5285b4e5e33','{\"latitude\":26.08144,\"longitude\":119.328431,\"details\":\"福建省福州市晋安区福新中路128号晋安区机关大院2号楼7层\",\"province\":\"福建省\",\"city\":\"福州市\",\"district\":\"晋安区\",\"phoneNumber\":\"13656987994\",\"realName\":\"起凡\",\"houseNumber\":\"311\",\"top\":false}',NULL,NULL,'3076bbf8182248dfb550dcc2771000bf','PRODUCT_ORDER');
+INSERT INTO `base_order` VALUES ('af0419cd1cd1423e801e01b360c16739','2024-08-26 17:14:36.932193','2024-08-26 17:14:36.932193','0f07d638f1bc401188d86dc650ab06a7','0f07d638f1bc401188d86dc650ab06a7','af0419cd1cd1423e801e01b360c16739','{\"latitude\":26.08144,\"longitude\":119.328431,\"details\":\"福建省福州市晋安区福新中路128号晋安区机关大院2号楼7层\",\"province\":\"福建省\",\"city\":\"福州市\",\"district\":\"晋安区\",\"phoneNumber\":\"13656987994\",\"realName\":\"起凡\",\"houseNumber\":\"311\",\"top\":false}',NULL,NULL,'3076bbf8182248dfb550dcc2771000bf','PRODUCT_ORDER'),('be643f205d3d46b582e0b5285b4e5e33','2024-08-24 10:25:07.666664','2024-08-24 10:25:07.666664','0f07d638f1bc401188d86dc650ab06a7','0f07d638f1bc401188d86dc650ab06a7','be643f205d3d46b582e0b5285b4e5e33','{\"latitude\":26.08144,\"longitude\":119.328431,\"details\":\"福建省福州市晋安区福新中路128号晋安区机关大院2号楼7层\",\"province\":\"福建省\",\"city\":\"福州市\",\"district\":\"晋安区\",\"phoneNumber\":\"13656987994\",\"realName\":\"起凡\",\"houseNumber\":\"311\",\"top\":false}',NULL,NULL,'3076bbf8182248dfb550dcc2771000bf','PRODUCT_ORDER');
 /*!40000 ALTER TABLE `base_order` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -328,7 +328,7 @@ CREATE TABLE `mystery_box` (
   `tips` varchar(1000) NOT NULL COMMENT '购买提示',
   `price` decimal(10,2) NOT NULL COMMENT '价格',
   `cover` varchar(255) NOT NULL COMMENT '封面',
-  `category_id` varchar(32) NOT NULL,
+  `category_id` varchar(32) NOT NULL COMMENT '类别id',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='盲盒';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -339,7 +339,7 @@ CREATE TABLE `mystery_box` (
 
 LOCK TABLES `mystery_box` WRITE;
 /*!40000 ALTER TABLE `mystery_box` DISABLE KEYS */;
-INSERT INTO `mystery_box` VALUES ('defb40ceb03740068907138adecaf1a3','2024-03-16 13:29:45.848413','2024-08-15 14:27:13.115265','0f07d638f1bc401188d86dc650ab06a7','0f07d638f1bc401188d86dc650ab06a7','VOCALOID 唱响未来之声！','33','21',2.00,'https://my-community.oss-cn-qingdao.aliyuncs.com/20240815142657c0e92113-3d4b-46a8-a69e-e5bc3bb4b9cd_28c16457add5ca49707fd437dd56c71c.png@344w_344h.png','74533bda5c964f569b3f5ad4803c7068'),('ebf8f84d60814944a847e0de4bb1d8b4','2024-03-16 13:24:13.168023','2024-08-26 15:32:17.941637','0f07d638f1bc401188d86dc650ab06a7','0f07d638f1bc401188d86dc650ab06a7','一见倾心的手办','一见倾心的手办','预售',15.00,'https://arttalks.oss-cn-beijing.aliyuncs.com/20240826151931c55d7389a8438c7146d1dfb9e5ace76e.png','321d4800cad94b06a2176c05d4949f3c');
+INSERT INTO `mystery_box` VALUES ('defb40ceb03740068907138adecaf1a3','2024-03-16 13:29:45.848413','2024-08-26 22:55:14.390279','0f07d638f1bc401188d86dc650ab06a7','0f07d638f1bc401188d86dc650ab06a7','VOCALOID 唱响未来之声！','33','预售',2.00,'https://my-community.oss-cn-qingdao.aliyuncs.com/20240815142657c0e92113-3d4b-46a8-a69e-e5bc3bb4b9cd_28c16457add5ca49707fd437dd56c71c.png@344w_344h.png','74533bda5c964f569b3f5ad4803c7068'),('ebf8f84d60814944a847e0de4bb1d8b4','2024-03-16 13:24:13.168023','2024-08-26 15:32:17.941637','0f07d638f1bc401188d86dc650ab06a7','0f07d638f1bc401188d86dc650ab06a7','一见倾心的手办','一见倾心的手办','预售',15.00,'https://arttalks.oss-cn-beijing.aliyuncs.com/20240826151931c55d7389a8438c7146d1dfb9e5ace76e.png','321d4800cad94b06a2176c05d4949f3c');
 /*!40000 ALTER TABLE `mystery_box` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -361,7 +361,7 @@ CREATE TABLE `mystery_box_category` (
   `description` text COMMENT '描述',
   `sort_order` int DEFAULT NULL COMMENT '排序号',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='盲盒类别';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -388,9 +388,9 @@ CREATE TABLE `mystery_box_order` (
   `creator_id` varchar(32) NOT NULL,
   `editor_id` varchar(32) NOT NULL,
   `status` varchar(32) NOT NULL COMMENT '订单状态',
-  `base_order_id` varchar(32) NOT NULL,
+  `base_order_id` varchar(32) NOT NULL COMMENT '基础订单id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='盲盒订单';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -399,7 +399,7 @@ CREATE TABLE `mystery_box_order` (
 
 LOCK TABLES `mystery_box_order` WRITE;
 /*!40000 ALTER TABLE `mystery_box_order` DISABLE KEYS */;
-INSERT INTO `mystery_box_order` VALUES ('be643f205d3d46b582e0b5285b4e5e33','2024-08-24 10:25:07.673663','2024-08-24 10:25:07.673663','0f07d638f1bc401188d86dc650ab06a7','0f07d638f1bc401188d86dc650ab06a7','CLOSED','be643f205d3d46b582e0b5285b4e5e33');
+INSERT INTO `mystery_box_order` VALUES ('af0419cd1cd1423e801e01b360c16739','2024-08-26 17:14:36.941212','2024-08-26 17:14:36.941212','0f07d638f1bc401188d86dc650ab06a7','0f07d638f1bc401188d86dc650ab06a7','CLOSED','af0419cd1cd1423e801e01b360c16739'),('be643f205d3d46b582e0b5285b4e5e33','2024-08-24 10:25:07.673663','2024-08-24 10:25:07.673663','0f07d638f1bc401188d86dc650ab06a7','0f07d638f1bc401188d86dc650ab06a7','CLOSED','be643f205d3d46b582e0b5285b4e5e33');
 /*!40000 ALTER TABLE `mystery_box_order` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -416,13 +416,13 @@ CREATE TABLE `mystery_box_order_item` (
   `edited_time` datetime(6) NOT NULL,
   `creator_id` varchar(32) NOT NULL,
   `editor_id` varchar(32) NOT NULL,
-  `mystery_box_id` varchar(32) NOT NULL,
-  `mystery_box` json NOT NULL,
-  `mystery_box_order_id` varchar(32) NOT NULL,
-  `mystery_box_count` int NOT NULL,
+  `mystery_box_id` varchar(32) NOT NULL COMMENT '盲盒id',
+  `mystery_box` json NOT NULL COMMENT '盲盒信息',
+  `mystery_box_order_id` varchar(32) NOT NULL COMMENT '盲盒订单id',
+  `mystery_box_count` int NOT NULL COMMENT '盲盒数量',
   `products` json DEFAULT NULL COMMENT '开盲盒得到的商品',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='盲盒订单项';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -431,7 +431,7 @@ CREATE TABLE `mystery_box_order_item` (
 
 LOCK TABLES `mystery_box_order_item` WRITE;
 /*!40000 ALTER TABLE `mystery_box_order_item` DISABLE KEYS */;
-INSERT INTO `mystery_box_order_item` VALUES ('2eac82b0de8b4a6c8e3daa471712608e','2024-08-24 10:25:07.677663','2024-08-24 10:25:07.677663','0f07d638f1bc401188d86dc650ab06a7','0f07d638f1bc401188d86dc650ab06a7','defb40ceb03740068907138adecaf1a3','{\"id\": \"defb40ceb03740068907138adecaf1a3\", \"name\": \"VOCALOID 唱响未来之声！\", \"tips\": \"21\", \"cover\": \"https://my-community.oss-cn-qingdao.aliyuncs.com/20240815142657c0e92113-3d4b-46a8-a69e-e5bc3bb4b9cd_28c16457add5ca49707fd437dd56c71c.png@344w_344h.png\", \"price\": 2.0, \"details\": \"33\", \"editedTime\": [2024, 8, 15, 14, 27, 13, 115265000], \"createdTime\": [2024, 3, 16, 13, 29, 45, 848413000]}','be643f205d3d46b582e0b5285b4e5e33',5,NULL);
+INSERT INTO `mystery_box_order_item` VALUES ('2eac82b0de8b4a6c8e3daa471712608e','2024-08-24 10:25:07.677663','2024-08-24 10:25:07.677663','0f07d638f1bc401188d86dc650ab06a7','0f07d638f1bc401188d86dc650ab06a7','defb40ceb03740068907138adecaf1a3','{\"id\": \"defb40ceb03740068907138adecaf1a3\", \"name\": \"VOCALOID 唱响未来之声！\", \"tips\": \"21\", \"cover\": \"https://my-community.oss-cn-qingdao.aliyuncs.com/20240815142657c0e92113-3d4b-46a8-a69e-e5bc3bb4b9cd_28c16457add5ca49707fd437dd56c71c.png@344w_344h.png\", \"price\": 2.0, \"details\": \"33\", \"editedTime\": [2024, 8, 15, 14, 27, 13, 115265000], \"createdTime\": [2024, 3, 16, 13, 29, 45, 848413000]}','be643f205d3d46b582e0b5285b4e5e33',5,NULL),('406c329efda34baeb008e6be9c5d0d9b','2024-08-26 17:14:36.948213','2024-08-26 17:14:36.948213','0f07d638f1bc401188d86dc650ab06a7','0f07d638f1bc401188d86dc650ab06a7','ebf8f84d60814944a847e0de4bb1d8b4','{\"id\": \"ebf8f84d60814944a847e0de4bb1d8b4\", \"name\": \"一见倾心的手办\", \"tips\": \"预售\", \"cover\": \"https://arttalks.oss-cn-beijing.aliyuncs.com/20240826151931c55d7389a8438c7146d1dfb9e5ace76e.png\", \"price\": 15.0, \"details\": \"一见倾心的手办\", \"editedTime\": [2024, 8, 26, 15, 32, 17, 941637000], \"createdTime\": [2024, 3, 16, 13, 24, 13, 168023000]}','af0419cd1cd1423e801e01b360c16739',5,NULL);
 /*!40000 ALTER TABLE `mystery_box_order_item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -477,16 +477,16 @@ CREATE TABLE `payment` (
   `edited_time` datetime(6) NOT NULL,
   `creator_id` varchar(36) NOT NULL,
   `editor_id` varchar(36) NOT NULL,
-  `pay_type` varchar(36) NOT NULL,
-  `pay_time` datetime DEFAULT NULL,
-  `pay_amount` decimal(10,2) NOT NULL,
-  `vip_amount` decimal(10,2) NOT NULL,
-  `coupon_amount` decimal(10,2) NOT NULL,
-  `product_amount` decimal(10,2) NOT NULL,
-  `delivery_fee` decimal(10,2) NOT NULL,
-  `trade_no` varchar(36) DEFAULT NULL,
+  `pay_type` varchar(36) NOT NULL COMMENT '支付方式（微信，支付宝等）',
+  `pay_time` datetime DEFAULT NULL COMMENT '支付时间',
+  `pay_amount` decimal(10,2) NOT NULL COMMENT '实付金额',
+  `vip_amount` decimal(10,2) NOT NULL COMMENT 'vip优惠金额',
+  `coupon_amount` decimal(10,2) NOT NULL COMMENT '优惠券优惠金额',
+  `product_amount` decimal(10,2) NOT NULL COMMENT '商品总价',
+  `delivery_fee` decimal(10,2) NOT NULL COMMENT '邮费',
+  `trade_no` varchar(36) DEFAULT NULL COMMENT '外系统交易订单号',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='支付详情';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -495,7 +495,7 @@ CREATE TABLE `payment` (
 
 LOCK TABLES `payment` WRITE;
 /*!40000 ALTER TABLE `payment` DISABLE KEYS */;
-INSERT INTO `payment` VALUES ('be643f205d3d46b582e0b5285b4e5e33','2024-08-24 10:25:07.662663','2024-08-24 10:25:07.662663','0f07d638f1bc401188d86dc650ab06a7','0f07d638f1bc401188d86dc650ab06a7','WE_CHAT_PAY',NULL,13.00,0.00,1.00,10.00,4.00,NULL);
+INSERT INTO `payment` VALUES ('af0419cd1cd1423e801e01b360c16739','2024-08-26 17:14:36.898863','2024-08-26 17:14:36.898863','0f07d638f1bc401188d86dc650ab06a7','0f07d638f1bc401188d86dc650ab06a7','WE_CHAT_PAY',NULL,78.00,0.00,1.00,75.00,4.00,NULL),('be643f205d3d46b582e0b5285b4e5e33','2024-08-24 10:25:07.662663','2024-08-24 10:25:07.662663','0f07d638f1bc401188d86dc650ab06a7','0f07d638f1bc401188d86dc650ab06a7','WE_CHAT_PAY',NULL,13.00,0.00,1.00,10.00,4.00,NULL);
 /*!40000 ALTER TABLE `payment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -521,7 +521,7 @@ CREATE TABLE `product` (
   `tags` varchar(255) NOT NULL COMMENT '标签',
   `specifications` text NOT NULL COMMENT '规格',
   `attributes` text NOT NULL COMMENT '属性',
-  `quality_type` varchar(32) NOT NULL,
+  `quality_type` varchar(32) NOT NULL COMMENT '品质类型',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='商品表';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -938,13 +938,13 @@ LOCK TABLES `vip_order` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `vip_pacakge`
+-- Table structure for table `vip_package`
 --
 
-DROP TABLE IF EXISTS `vip_pacakge`;
+DROP TABLE IF EXISTS `vip_package`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `vip_pacakge` (
+CREATE TABLE `vip_package` (
   `id` varchar(32) NOT NULL,
   `created_time` datetime(6) NOT NULL,
   `edited_time` datetime(6) NOT NULL,
@@ -958,13 +958,13 @@ CREATE TABLE `vip_pacakge` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `vip_pacakge`
+-- Dumping data for table `vip_package`
 --
 
-LOCK TABLES `vip_pacakge` WRITE;
-/*!40000 ALTER TABLE `vip_pacakge` DISABLE KEYS */;
-INSERT INTO `vip_pacakge` VALUES ('52ee329b1e0a45a4934eb2eba5da951f','2024-03-27 17:57:03.004623','2024-08-07 23:03:15.193887','0f07d638f1bc401188d86dc650ab06a7','ad9bff77beb342d091897e69e0a707dd','季度会员',0.01,90),('52ee329b1e0a45a4934eb2eba5da952f','2024-03-27 17:57:03.004623','2024-03-27 17:57:03.004623','0f07d638f1bc401188d86dc650ab06a7','0f07d638f1bc401188d86dc650ab06a7','包月会员',60.00,30),('52ee329b1e0a45a4934eb2eba5da953f','2024-03-27 17:57:03.004623','2024-08-01 21:59:38.910581','0f07d638f1bc401188d86dc650ab06a7','0f07d638f1bc401188d86dc650ab06a7','半年会员',340.00,180),('52ee329b1e0a45a4934eb2eba5da954f','2024-03-27 17:57:03.004623','2024-08-01 21:59:22.769951','0f07d638f1bc401188d86dc650ab06a7','0f07d638f1bc401188d86dc650ab06a7','包年会员',680.00,360);
-/*!40000 ALTER TABLE `vip_pacakge` ENABLE KEYS */;
+LOCK TABLES `vip_package` WRITE;
+/*!40000 ALTER TABLE `vip_package` DISABLE KEYS */;
+INSERT INTO `vip_package` VALUES ('52ee329b1e0a45a4934eb2eba5da951f','2024-03-27 17:57:03.004623','2024-08-07 23:03:15.193887','0f07d638f1bc401188d86dc650ab06a7','ad9bff77beb342d091897e69e0a707dd','季度会员',0.01,90),('52ee329b1e0a45a4934eb2eba5da952f','2024-03-27 17:57:03.004623','2024-03-27 17:57:03.004623','0f07d638f1bc401188d86dc650ab06a7','0f07d638f1bc401188d86dc650ab06a7','包月会员',60.00,30),('52ee329b1e0a45a4934eb2eba5da953f','2024-03-27 17:57:03.004623','2024-08-01 21:59:38.910581','0f07d638f1bc401188d86dc650ab06a7','0f07d638f1bc401188d86dc650ab06a7','半年会员',340.00,180),('52ee329b1e0a45a4934eb2eba5da954f','2024-03-27 17:57:03.004623','2024-08-01 21:59:22.769951','0f07d638f1bc401188d86dc650ab06a7','0f07d638f1bc401188d86dc650ab06a7','包年会员',680.00,360);
+/*!40000 ALTER TABLE `vip_package` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -976,4 +976,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-26 16:51:17
+-- Dump completed on 2024-08-31 22:00:47

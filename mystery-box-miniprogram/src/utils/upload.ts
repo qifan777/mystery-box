@@ -45,11 +45,8 @@ export const beforeXhrUpload = async (_: any, options: any) => {
           name: options.name,
           success(response) {
             if (options.xhrState == response.statusCode) {
-              resolve(JSON.parse(response.data).result.url);
-              options.onSuccess?.(
-                JSON.parse(response.data).result.url,
-                options,
-              );
+              resolve(JSON.parse(response.data).result);
+              options.onSuccess?.(JSON.parse(response.data).result, options);
             } else {
               reject();
               options.onFailure?.(response, options);

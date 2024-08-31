@@ -17,7 +17,8 @@ import org.springframework.data.domain.Pageable;
 
 public interface MysteryBoxRepository extends JRepository<MysteryBox, String> {
     MysteryBoxTable t = MysteryBoxTable.$;
-    MysteryBoxFetcher COMPLEX_FETCHER_FOR_ADMIN = MysteryBoxFetcher.$.allScalarFields()
+    MysteryBoxFetcher COMPLEX_FETCHER_FOR_ADMIN = MysteryBoxFetcher.$
+            .allScalarFields()
             .products(ProductRepository.COMPLEX_FETCHER_FOR_ADMIN)
             .category(MysteryBoxCategoryFetcher.$.name())
             .creator(UserFetcher.$.phone().nickname())

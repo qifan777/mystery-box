@@ -2,19 +2,59 @@
 import { usePageHelper } from "@/utils/page";
 import { api } from "@/utils/api-instance";
 import { switchPage } from "@/utils/common";
-import { computed, ref } from "vue";
-import { SlideshowDto } from "@/apis/__generated/model/dto";
+import { ref } from "vue";
+import {
+  MysteryBoxCategoryDto,
+  MysteryBoxDto,
+  SlideshowDto,
+} from "@/apis/__generated/model/dto";
 import Taro from "@tarojs/taro";
-import { useHomeStore } from "@/stores/home-store";
-type Category = { id: string; name: string };
-type SlideShow = SlideshowDto["SlideshowRepository/COMPLEX_FETCHER_FOR_FRONT"];
-const homeStore = useHomeStore();
-homeStore.getUserInfo();
+// -----盲盒展示相关-----
+type MysteryBox =
+  MysteryBoxDto["MysteryBoxRepository/COMPLEX_FETCHER_FOR_FRONT"];
 const { pageData, reloadPageData } = usePageHelper(
   api.mysteryBoxForFrontController.query,
   api.mysteryBoxForFrontController,
   { query: {} },
 );
+// -----盲盒展示相关-----
+
+// -----类别相关-----
+type Category = Pick<
+  MysteryBoxCategoryDto["MysteryBoxCategoryRepository/COMPLEX_FETCHER_FOR_FRONT"],
+  "id" | "name"
+>;
+const categories = ref<Category[]>([{ name: "全部", id: "" }]);
+Taro.useLoad(() => {
+  api.mysteryBoxCategoryForFrontController
+    .query({
+      body: {
+        pageNum: 1,
+        pageSize: 1000,
+        query: {},
+        sorts: [{ property: "sortOrder", direction: "ASC" }],
+      },
+    })
+    .then((res) => {
+      categories.value.push(...res.content);
+    });
+});
+const activeCategory = ref<{ id: string; name: string }>({
+  id: "",
+  name: "全部",
+});
+const handleChangeCategory = (category: Category) => {
+  activeCategory.value = category;
+  reloadPageData({
+    pageNum: 1,
+    pageSize: 10,
+    query: { categoryId: category.id },
+  });
+};
+// -----类别相关-----
+
+// -----轮播图相关-----
+type SlideShow = SlideshowDto["SlideshowRepository/COMPLEX_FETCHER_FOR_FRONT"];
 const slides = ref<
   SlideshowDto["SlideshowRepository/COMPLEX_FETCHER_FOR_FRONT"][]
 >([]);
@@ -36,41 +76,10 @@ Taro.useLoad(() => {
     .then((res) => {
       slides.value = res.content;
     });
-  api.mysteryBoxCategoryForFrontController
-    .query({
-      body: {
-        pageNum: 1,
-        pageSize: 1000,
-        query: {},
-        sorts: [{ property: "sortOrder", direction: "ASC" }],
-      },
-    })
-    .then((res) => {
-      categoryList.value = res.content;
-    });
 });
-const categoryList = ref<Category[]>([]);
-const activeCategory = ref<{ id: string; name: string }>({
-  id: "",
-  name: "全部",
-});
-const categories = computed(() => {
-  const rows: Category[] = [{ name: "全部", id: "" }];
-  rows.push(
-    ...categoryList.value.map((row) => {
-      return { ...row } satisfies Category;
-    }),
-  );
-  return rows;
-});
-const handleChangeCategory = (category: Category) => {
-  activeCategory.value = category;
-  reloadPageData({
-    pageNum: 1,
-    pageSize: 10,
-    query: { categoryId: category.id },
-  });
-};
+// -----轮播图相关-----
+
+// -----启用小程序右上角分享菜单-----
 Taro.showShareMenu({
   withShareTicket: true,
   showShareItems: ["wechatFriends", "wechatMoment"],
@@ -113,15 +122,15 @@ Taro.showShareMenu({
     </scroll-view>
 
     <walter-fall :data-list="pageData.content" class="product-walter-fall">
-      <template #itemLeft="{ item }">
+      <template #itemLeft="{ item }: { item: MysteryBox }">
         <product-cover
-          :product="item"
+          :product="{ ...item, tags: [item.tips] }"
           @click="switchPage('/pages/box/box-details?id=' + item.id)"
         ></product-cover>
       </template>
-      <template #itemRight="{ item }">
+      <template #itemRight="{ item }: { item: MysteryBox }">
         <product-cover
-          :product="item"
+          :product="{ ...item, tags: [item.tips] }"
           @click="switchPage('/pages/box/box-details?id=' + item.id)"
         ></product-cover>
       </template>

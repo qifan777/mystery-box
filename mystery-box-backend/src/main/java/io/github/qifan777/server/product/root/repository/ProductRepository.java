@@ -24,7 +24,8 @@ public interface ProductRepository extends JRepository<Product, String> {
             .category(ProductCategoryFetcher.$.allScalarFields())
             .creator(UserFetcher.$.phone().nickname())
             .editor(UserFetcher.$.phone().nickname());
-    ProductFetcher COMPLEX_FETCHER_FOR_FRONT = ProductFetcher.$.allScalarFields()
+    ProductFetcher COMPLEX_FETCHER_FOR_FRONT = ProductFetcher.$
+            .allScalarFields()
             .category(ProductCategoryFetcher.$.name())
             .creator(true);
 

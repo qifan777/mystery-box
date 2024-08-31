@@ -41,12 +41,14 @@ export const usePageHelper = <T extends Object, E>(
     enablePullDownRefresh?: boolean;
     enableReachBottom?: boolean;
     enableLoad?: boolean;
+    enableShowLoad?: boolean;
   },
 ) => {
   config = {
     enablePullDownRefresh: true,
     enableReachBottom: true,
     enableLoad: true,
+    enableShowLoad: false,
     ...config,
   };
   const pageData = ref({
@@ -135,6 +137,12 @@ export const usePageHelper = <T extends Object, E>(
   if (config?.enableLoad) {
     // 首次进入页面加载
     Taro.useLoad(async () => {
+      await loadPageData();
+    });
+  }
+  if (config?.enableShowLoad) {
+    // 每次进入页面刷新数据
+    Taro.useDidShow(async () => {
       await loadPageData();
     });
   }

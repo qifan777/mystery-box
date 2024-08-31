@@ -22,7 +22,8 @@ public class MysteryBoxForFrontController {
 
     @GetMapping("{id}")
     public @FetchBy(value = "COMPLEX_FETCHER_FOR_FRONT") MysteryBox findById(@PathVariable String id) {
-        return mysteryBoxRepository.findById(id, MysteryBoxRepository.COMPLEX_FETCHER_FOR_FRONT).orElseThrow(() -> new BusinessException("数据不存在"));
+        return mysteryBoxRepository.findById(id, MysteryBoxRepository.COMPLEX_FETCHER_FOR_FRONT)
+                .orElseThrow(() -> new BusinessException("数据不存在"));
     }
 
     @PostMapping("query")

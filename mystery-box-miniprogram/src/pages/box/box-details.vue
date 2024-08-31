@@ -4,24 +4,36 @@ import { MysteryBoxDto } from "@/apis/__generated/model/dto";
 import Taro from "@tarojs/taro";
 import { api } from "@/utils/api-instance";
 import { Dictionaries } from "@/apis/__generated/model/enums/DictConstants";
-type Product =
-  MysteryBoxDto["MysteryBoxRepository/COMPLEX_FETCHER_FOR_FRONT"]["products"][0];
+// -----防止内容被刘海屏遮挡-----
+const marginTop = ref("0");
+Taro.useLoad(() => {
+  marginTop.value = Taro.getMenuButtonBoundingClientRect().top + "px";
+});
+// -----防止内容被刘海屏遮挡-----
+
+// -----盲盒详情，含商品信息-----
 const box =
   ref<MysteryBoxDto["MysteryBoxRepository/COMPLEX_FETCHER_FOR_FRONT"]>();
-Taro.useLoad((ops) => {
-  console.log(ops);
-  api.mysteryBoxForFrontController.findById({ id: ops.id }).then((res) => {
+Taro.useLoad(({ id }) => {
+  api.mysteryBoxForFrontController.findById({ id }).then((res) => {
     res.products = res.products.sort((a, b) => a.price - b.price);
     box.value = res;
   });
-  marginTop.value = Taro.getMenuButtonBoundingClientRect().top + "px";
 });
+// -----盲盒详情，含商品信息-----
+
+// -----商品详情对话框-----
+type Product =
+  MysteryBoxDto["MysteryBoxRepository/COMPLEX_FETCHER_FOR_FRONT"]["products"][0];
 const dialogVisible = ref(false);
 const activeProduct = ref<Product>();
 const handleProductClick = (product: Product) => {
   activeProduct.value = product;
   dialogVisible.value = true;
 };
+// -----商品详情对话框-----
+
+// -----创建订单-----
 const handleCreateOrder = (count: number) => {
   Taro.navigateTo({
     url: "./box-order-create",
@@ -30,21 +42,23 @@ const handleCreateOrder = (count: number) => {
     },
   });
 };
+// -----创建订单-----
+
 Taro.showShareMenu({
   withShareTicket: true,
   showShareItems: ["wechatFriends", "wechatMoment"],
 });
-const marginTop = ref("0");
 </script>
 
 <template>
-  <div>
+  <div v-if="box">
     <product-dialog
       v-if="activeProduct"
       v-model:visible="dialogVisible"
       :product="activeProduct"
     ></product-dialog>
-    <scroll-view class="box-details" :scroll-y="true" v-if="box">
+    <scroll-view class="box-details" :scroll-y="true">
+      <!--盲盒基本信息-->
       <div class="box-info">
         <div class="name">{{ box.name }}</div>
         <div class="probability">
@@ -56,25 +70,30 @@ const marginTop = ref("0");
           </div>
         </div>
       </div>
+      <!--盲盒商品列表-->
       <div class="product-list">
         <div
-          :class="[
-            'product',
-            product.qualityType == 'LEGENDARY' ? 'legendary' : '',
-            product.qualityType == 'HIDDEN' ? 'hidden' : '',
-            product.qualityType == 'GENERAL' ? 'general' : '',
-          ]"
+          class="product-wrapper"
           v-for="product in box.products"
           :key="product.id"
-          @click="handleProductClick(product)"
         >
-          <image class="cover" :src="product.cover" mode="heightFix"></image>
-          <div class="background-text"></div>
+          <div
+            :class="['product', product.qualityType.toLowerCase()]"
+            @click="handleProductClick(product)"
+          >
+            <image class="cover" :src="product.cover" mode="widthFix"></image>
+            <div class="background-text"></div>
+          </div>
         </div>
       </div>
       <nut-divider class="divider">商品介绍</nut-divider>
-      <div class="details">
-        <div class="product" v-for="product in box.products" :key="product.id">
+      <!--盲盒商品详情-->
+      <div class="product-details-list">
+        <div
+          class="product-details"
+          v-for="product in box.products"
+          :key="product.id"
+        >
           <div class="row">
             {{ Dictionaries["QualityType"][product.qualityType].keyName }} :
             {{ product.name }}
@@ -97,7 +116,7 @@ const marginTop = ref("0");
         <div>【普通款】：概率为【92.41%】</div>
       </div>
     </scroll-view>
-    <div class="box-bar" v-if="box">
+    <div class="box-bar">
       <div class="buttons">
         <div class="single button" @click="handleCreateOrder(1)">
           <span>￥{{ box.price }}</span>
@@ -156,60 +175,49 @@ page {
     padding: 30px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-column-gap: 42px;
     grid-row-gap: 40px;
     justify-content: center;
     .product {
-      height: 300px;
+      width: 200px;
+      height: 302.7px;
+      margin: auto;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      // 垂直居中
       justify-content: center;
-
+      align-items: center;
+      background-repeat: no-repeat;
+      background-size: cover;
       .cover {
-        height: 200px;
+        width: 180px;
+      }
+      .background-text {
+        background-repeat: no-repeat;
+        background-size: contain;
+        width: 200px;
+        height: 66px;
+        // 水平居中
+        background-position: 50%;
       }
     }
-
     .legendary {
       background-image: url("../../assets/icons/legendary-style.png");
-      background-repeat: no-repeat;
-      background-size: contain;
-
       .background-text {
         background-image: url("../../assets/icons/legendary-star.png");
-        background-repeat: no-repeat;
-        background-size: contain;
-        width: 200px;
-        height: 66px;
-        background-position: 50%;
-        margin-top: 10px;
       }
     }
-
     .hidden {
       background-image: url("../../assets/icons/hidden-style.png");
-      background-repeat: no-repeat;
-      background-size: contain;
-
       .background-text {
         background-image: url("../../assets/icons/hidden-star.png");
-        background-repeat: no-repeat;
-        background-size: contain;
-        width: 200px;
-        height: 66px;
-        background-position: 50%;
       }
     }
-
     .general {
       background-image: url("../../assets/icons/general-style.png");
-      background-repeat: no-repeat;
-      background-size: contain;
     }
   }
-  .details {
-    .product {
+  .product-details-list {
+    .product-details {
       padding: 30px;
       margin: 50px 20px 20px;
       border-radius: 20px;
@@ -228,7 +236,7 @@ page {
     padding-bottom: 150px;
     div {
       padding: 20px;
-      background-color: white;
+      background-color: rgba(white, 0.4);
     }
   }
 }

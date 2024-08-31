@@ -39,6 +39,7 @@ declare module '@vue/runtime-core' {
     ProductRow: typeof import('./src/components/product/product-row.vue')['default']
     ProductSkuDialog: typeof import('./src/components/product/product-sku-dialog.vue')['default']
     RegisterPopup: typeof import('./src/components/register-popup/register-popup.vue')['default']
+    SpecificationList: typeof import('./src/components/product/specification-list.vue')['default']
     UserAvatar: typeof import('./src/components/user/user-avatar.vue')['default']
     UserRow: typeof import('./src/components/user/user-row.vue')['default']
     WalterFall: typeof import('./src/components/walter-fall/walter-fall.vue')['default']

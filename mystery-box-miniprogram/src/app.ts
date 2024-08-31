@@ -2,6 +2,7 @@ import { createApp } from "vue";
 import { createPinia } from "pinia";
 import dayjs from "dayjs";
 import "dayjs/locale/zh-cn.js";
+import "./app.scss";
 dayjs.locale("zh-cn");
 const App = createApp({
   onShow() {},

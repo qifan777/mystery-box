@@ -2,6 +2,7 @@ package io.github.qifan777.server.address.entity;
 
 import io.github.qifan777.server.infrastructure.jimmer.BaseEntity;
 import io.qifan.infrastructure.generator.core.GenEntity;
+import jakarta.validation.constraints.NotBlank;
 import org.babyfish.jimmer.sql.Entity;
 
 /**
@@ -22,11 +23,6 @@ public interface Address extends BaseEntity {
     double longitude();
 
     /**
-     * 详细地址
-     */
-    String details();
-
-    /**
      * 省
      */
     String province();
@@ -42,18 +38,27 @@ public interface Address extends BaseEntity {
     String district();
 
     /**
+     * 详细地址
+     */
+    @NotBlank(message = "详细地址不能为空")
+    String details();
+
+    /**
      * 手机号
      */
+    @NotBlank(message = "手机号不能为空")
     String phoneNumber();
 
     /**
      * 真实姓名
      */
+    @NotBlank(message = "真实姓名不能为空")
     String realName();
 
     /**
      * 门牌号
      */
+    @NotBlank(message = "门牌号不能为空")
     String houseNumber();
 
     /**

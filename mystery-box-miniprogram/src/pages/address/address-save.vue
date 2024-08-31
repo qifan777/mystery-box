@@ -43,74 +43,50 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import Taro from "@tarojs/taro";
 import { api } from "@/utils/api-instance";
 import { AddressInput } from "@/apis/__generated/model/static";
 import { RectRight } from "@nutui/icons-vue-taro";
-import location from "@/assets/icons/local.png";
-// 当前位置标记
-const marker = computed(() => {
-  return {
-    id: 1,
-    iconPath: location,
-    latitude: address.value.latitude,
-    longitude: address.value.longitude,
-    width: 40,
-    height: 40,
-  };
-});
-// 获取到经纬度
-Taro.authorize({
-  scope: "scope.userLocation",
-  success() {
-    Taro.getLocation({
-      success: (res) => {
-        // 编辑时不需要获取当前地址
-        if (!address.value.id) {
-          address.value.latitude = res.latitude;
-          address.value.longitude = res.longitude;
-        }
-      },
-    });
-  },
-});
+
 const address = ref<AddressInput>({
   details: "",
-  latitude: 23.099994,
-  longitude: 113.32452,
+  latitude: 0,
+  longitude: 0,
   phoneNumber: "",
   realName: "",
   top: false,
   houseNumber: "",
 });
-
+// 编辑回显
+Taro.useLoad(({ id }) => {
+  if (id) {
+    api.addressForFrontController.findById({ id }).then((res) => {
+      address.value = res;
+    });
+  }
+});
+// 选择地址
 const chooseAddress = () => {
   Taro.chooseLocation({
     success(result) {
       address.value.details = result.address;
       address.value.latitude = result.latitude;
       address.value.longitude = result.longitude;
-      console.log(result);
     },
   });
 };
 
 // 提交表单
 const submit = () => {
+  if (!address.value.latitude) {
+    return Taro.showToast({ title: "请选择地址", icon: "error" });
+  }
   api.addressForFrontController.save({ body: address.value }).then(() => {
     Taro.showToast({ title: "提交成功", icon: "success" });
     Taro.navigateBack();
   });
 };
-// 编辑回显
-Taro.useLoad((ops: any) => {
-  if (ops.id) {
-    api.addressForFrontController.findById({ id: ops.id }).then((res) => {
-      address.value = res;
-    });
-  }
-});
 </script>
 
 <style lang="scss">
