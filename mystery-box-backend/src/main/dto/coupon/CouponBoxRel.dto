@@ -1,0 +1,15 @@
+export io.github.qifan777.server.coupon.box.entity.CouponBoxRel
+
+input CouponBoxRelInput {
+    #allScalars(CouponBoxRel)
+    id
+    id(coupon)
+    id(box)
+}
+
+specification CouponBoxRelSpec {
+    #allScalars
+    id(coupon)
+    id(box)
+    id(creator)
+}

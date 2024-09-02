@@ -1,0 +1,17 @@
+export io.github.qifan777.server.coupon.activity.entity.CouponReceiveActivity
+
+input CouponReceiveActivityInput {
+    #allScalars(CouponReceiveActivity)
+    id
+    id(coupon)
+}
+
+specification CouponReceiveActivitySpec {
+    #allScalars
+    id(coupon)
+    ge(effectiveDate)
+    le(effectiveDate)
+    ge(expirationDate)
+    le(expirationDate)
+    id(creator)
+}

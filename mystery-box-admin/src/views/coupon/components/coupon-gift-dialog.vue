@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import UserChooseTable from '@/views/user/components/user-choose-table.vue'
 import { Present } from '@element-plus/icons-vue'
-import { inject, ref } from 'vue'
+import { provide, ref } from 'vue'
 import { api } from '@/utils/api-instance'
 import { useTableHelper } from '@/components/base/table/table-helper'
 import { ElMessage } from 'element-plus'
+
 const userTableHelper = useTableHelper(
   api.userForAdminController.query,
   api.userForAdminController,
   {}
 )
-inject('userTableHelper', userTableHelper)
+provide('userTableHelper', userTableHelper)
 const props = defineProps<{ couponId: string }>()
 const visible = ref(false)
 const handleConfirm = async () => {
@@ -20,18 +21,22 @@ const handleConfirm = async () => {
       id: props.couponId
     }
   })
-  ElMessage.success('发送成功')
+  ElMessage.success('赠送成功')
   visible.value = false
+}
+const handleOpen = () => {
+  visible.value = true
+  userTableHelper.reloadTableData()
 }
 </script>
 
 <template>
-  <el-button type="primary" link size="small">
+  <el-button type="primary" link size="small" @click="handleOpen">
     <el-icon>
       <present></present>
     </el-icon>
   </el-button>
-  <el-dialog v-model="visible">
+  <el-dialog append-to-body v-model="visible">
     <user-choose-table></user-choose-table>
     <template #footer>
       <el-button type="primary" @click="handleConfirm">确认</el-button>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { inject, onMounted } from 'vue'
+import { inject } from 'vue'
 import { api } from '@/utils/api-instance'
 import type { Scope } from '@/typings'
 import type { UserDto } from '@/apis/__generated/model/dto'

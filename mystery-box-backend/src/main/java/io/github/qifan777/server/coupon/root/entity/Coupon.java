@@ -69,5 +69,11 @@ public interface Coupon extends BaseEntity {
      */
     @GenNumberField(label = "折扣", order = 8)
     BigDecimal discount();
+
+    /**
+     * 是否启用
+     */
+    @GenBooleanField(label = "是否启用", order = 9)
+    boolean status();
 }
 
