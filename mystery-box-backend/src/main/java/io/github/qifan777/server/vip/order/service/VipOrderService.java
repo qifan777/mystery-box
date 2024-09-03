@@ -11,12 +11,12 @@ import io.github.qifan777.server.payment.entity.Payment;
 import io.github.qifan777.server.payment.entity.PaymentDraft;
 import io.github.qifan777.server.payment.model.WeChatPayModel;
 import io.github.qifan777.server.payment.service.WeChatPayService;
-import io.github.qifan777.server.vip.pack.entity.VipPackage;
-import io.github.qifan777.server.vip.pack.repository.VipPackageRepository;
 import io.github.qifan777.server.vip.order.entity.VipOrder;
 import io.github.qifan777.server.vip.order.entity.VipOrderDraft;
 import io.github.qifan777.server.vip.order.entity.dto.VipOrderInput;
 import io.github.qifan777.server.vip.order.repository.VipOrderRepository;
+import io.github.qifan777.server.vip.pack.entity.VipPackage;
+import io.github.qifan777.server.vip.pack.repository.VipPackageRepository;
 import io.github.qifan777.server.vip.root.entity.Vip;
 import io.github.qifan777.server.vip.root.entity.VipDraft;
 import io.github.qifan777.server.vip.root.repository.VipRepository;
@@ -42,7 +42,7 @@ public class VipOrderService {
     private final VipRepository vipRepository;
     private final WxPayService wxPayService;
 
-    private Payment initPayment(BigDecimal price) {
+    private Payment initPayment(BigDecimal price, String id) {
         return PaymentDraft.$.produce(draft -> {
             draft.setProductAmount(price)
                     .setPayType(DictConstants.PayType.WE_CHAT_PAY)
@@ -50,20 +50,19 @@ public class VipOrderService {
                     .setVipAmount(BigDecimal.ZERO)
                     .setDeliveryFee(BigDecimal.ZERO)
                     .setPayAmount(price)
-                    .setId(IdUtil.fastSimpleUUID());
+                    .setId(id);
         });
     }
 
     public WxPayUnifiedOrderV3Result.JsapiResult save(VipOrderInput vipOrderInput) {
         VipPackage vipPackage = vipPackageRepository.findById(vipOrderInput.getVipPackageId()).orElseThrow(() -> new BusinessException(ResultCode.NotFindError));
-        Payment payment = this.initPayment(vipPackage.price());
         String orderId = IdUtil.fastSimpleUUID();
-        VipOrder produce = VipOrderDraft.$.produce(vipOrderInput.toEntity(),draft -> {
+        VipOrder produce = VipOrderDraft.$.produce(vipOrderInput.toEntity(), draft -> {
             draft.setId(orderId)
                     .setUserId(StpUtil.getLoginIdAsString());
             draft.applyBaseOrder(baseOrderDraft -> {
                 baseOrderDraft.setId(orderId)
-                        .setPayment(payment)
+                        .setPayment(initPayment(vipPackage.price(), orderId))
                         .setRemark("userId:" + StpUtil.getLoginIdAsString() + ";vipPackageId:" + vipPackage.id())
                         .setType(DictConstants.OrderType.VIP_ORDER)
                 ;
@@ -96,6 +95,11 @@ public class VipOrderService {
             draft.setEndTime(endTime.plusDays(vipOrder.vipPackage().days()));
         }));
         // 更新支付信息
-        return vipOrderRepository.save(VipOrderDraft.$.produce(vipOrder, draft -> draft.baseOrder().payment().setPayTime(LocalDateTime.now()).setTradeNo(outTradeNo))).id();
+        return vipOrderRepository.save(VipOrderDraft.$.produce(vipOrder, draft -> draft
+                        .baseOrder()
+                        .payment()
+                        .setPayTime(LocalDateTime.now())
+                        .setTradeNo(outTradeNo)))
+                .id();
     }
 }

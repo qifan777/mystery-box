@@ -195,6 +195,17 @@ const handleDelete = (ids: string[]) => {
         </template>
       </el-table-column>
       <el-table-column
+        label="状态"
+        prop="status"
+        sortable="custom"
+        show-overflow-tooltip
+        width="120"
+      >
+        <template v-slot:default="{ row }: CouponScope">
+          <el-switch v-model="row.status" disabled></el-switch>
+        </template>
+      </el-table-column>
+      <el-table-column
         label="创建时间"
         prop="createdTime"
         sortable="custom"

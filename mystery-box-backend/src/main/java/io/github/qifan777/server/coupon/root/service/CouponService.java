@@ -32,16 +32,15 @@ public class CouponService {
     private final CouponRepository couponRepository;
     private final CouponUserRelRepository couponUserRelRepository;
 
-    public void countCheck(String id) {
-        Coupon coupon = couponRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ResultCode.NotFindError, "优惠券不存在"));
-        if (coupon.releasedQuantity() == 0) {
-            throw new BusinessException(ResultCode.NotFindError, "优惠券已领完");
-        }
-    }
-
     public void gift(CouponGiftInput giftInput) {
-        countCheck(giftInput.getId());
+        Coupon coupon = couponRepository.findById(giftInput.getId())
+                .orElseThrow(() -> new BusinessException(ResultCode.NotFindError, "优惠券不存在"));
+        if (coupon.releasedQuantity() - giftInput.getUserIds().length < 0) {
+            throw new BusinessException(ResultCode.NotFindError, "优惠券不足");
+        }
+        if (!coupon.status()) {
+            throw new BusinessException(ResultCode.NotFindError, "优惠券已下架");
+        }
         List<CouponUserRel> couponUsers = Arrays.stream(giftInput.getUserIds())
                 .map(userId -> CouponUserRelDraft.$.produce(draft -> {
                     draft.setCouponId(giftInput.getId())
@@ -50,18 +49,6 @@ public class CouponService {
                             .setStatus(DictConstants.CouponUseStatus.UNUSED);
                 })).collect(Collectors.toList());
         couponUserRelRepository.saveEntities(couponUsers);
-    }
-
-    public List<CouponUserRel> availableCoupons(BigDecimal amount) {
-        CouponUserRelTable t = CouponUserRelTable.$;
-        return couponUserRelRepository.sql().createQuery(t)
-                .where(t.userId().eq(StpUtil.getLoginIdAsString()))
-                .where(t.status().eq(DictConstants.CouponUseStatus.UNUSED))
-                .where(t.coupon().thresholdAmount().le(amount))
-                .where(t.coupon().effectiveDate().le(LocalDateTime.now()))
-                .where(t.coupon().expirationDate().ge(LocalDateTime.now()))
-                .select(t.fetch(CouponUserRelRepository.COMPLEX_FETCHER_FOR_FRONT))
-                .execute();
     }
 
     public BigDecimal calculate(String id, BigDecimal amount) {

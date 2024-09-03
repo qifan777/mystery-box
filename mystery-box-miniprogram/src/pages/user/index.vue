@@ -57,6 +57,14 @@
         ></image>
         <div class="name">会员权益</div>
       </div>
+      <div class="function" @tap="switchPage('/pages/coupon/index?from=user')">
+        <image
+          class="icon"
+          mode="widthFix"
+          src="@/assets/icons/coupon.png"
+        ></image>
+        <div class="name">优惠券</div>
+      </div>
     </div>
     <div class="divider">
       <div class="front">其他功能</div>

@@ -13,18 +13,6 @@ const query = defineModel<CouponSpec>('query', { required: true })
       <el-form-item label="优惠券名称">
         <el-input v-model.trim="query.name"></el-input>
       </el-form-item>
-      <el-form-item label="门槛金额">
-        <el-input-number
-          v-model="query.thresholdAmount"
-          controls-position="right"
-        ></el-input-number>
-      </el-form-item>
-      <el-form-item label="发放数量">
-        <el-input-number
-          v-model="query.releasedQuantity"
-          controls-position="right"
-        ></el-input-number>
-      </el-form-item>
       <el-form-item label="生效时间">
         <datetime-picker
           v-model:min-date-time="query.minEffectiveDate"
@@ -48,11 +36,8 @@ const query = defineModel<CouponSpec>('query', { required: true })
           v-model="query.scopeType"
         ></dict-select>
       </el-form-item>
-      <el-form-item label="优惠金额">
-        <el-input-number v-model="query.amount" controls-position="right"></el-input-number>
-      </el-form-item>
-      <el-form-item label="折扣">
-        <el-input-number v-model="query.discount" controls-position="right"></el-input-number>
+      <el-form-item label="状态" prop="status">
+        <el-switch v-model="query.status"></el-switch>
       </el-form-item>
       <el-form-item label=" ">
         <div class="btn-wrapper">

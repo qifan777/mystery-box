@@ -17,19 +17,23 @@ const initForm: CouponInput = {
   effectiveDate: '',
   expirationDate: '',
   name: '',
-  scopeType: 'PRODUCT',
-  thresholdAmount: 0
+  scopeType: 'GENERAL',
+  thresholdAmount: 0,
+  status: true,
+  releasedQuantity: 0
 }
 const { formData: form, restForm } = useFormHelper<CouponInput>(initForm)
 const rules = reactive<FormRules<CouponInput>>({
   name: [{ required: true, message: '请输入优惠券名称', trigger: 'blur' }],
+  releasedQuantity: [{ required: true, message: '请输入发放数量', trigger: 'blur' }],
   thresholdAmount: [{ required: true, message: '请输入门槛金额', trigger: 'blur' }],
   effectiveDate: [{ required: true, message: '请输入生效时间', trigger: 'blur' }],
   expirationDate: [{ required: true, message: '请输入过期时间', trigger: 'blur' }],
   couponType: [{ required: true, message: '请输入优惠类型', trigger: 'change' }],
   scopeType: [{ required: true, message: '请输入使用范围类型', trigger: 'change' }],
   amount: [{ required: true, message: '请输入优惠金额', trigger: 'blur' }],
-  discount: [{ required: true, message: '请输入折扣', trigger: 'blur' }]
+  discount: [{ required: true, message: '请输入折扣', trigger: 'blur' }],
+  status: [{ required: true, message: '请输入状态', trigger: 'change' }]
 })
 const handleConfirm = () => {
   formRef.value?.validate(
@@ -89,11 +93,14 @@ onActivated(() => {
           v-model="form.scopeType"
         ></dict-select>
       </el-form-item>
-      <el-form-item label="优惠金额" prop="amount">
+      <el-form-item label="优惠金额" prop="amount" v-if="form.couponType === 'REDUCE'">
         <el-input-number v-model="form.amount"></el-input-number>
       </el-form-item>
-      <el-form-item label="折扣" prop="discount">
+      <el-form-item label="折扣" prop="discount" v-if="form.couponType === 'DISCOUNT'">
         <el-input-number v-model="form.discount"></el-input-number>
+      </el-form-item>
+      <el-form-item label="状态" prop="status">
+        <el-switch v-model="form.status"></el-switch>
       </el-form-item>
     </el-form>
     <el-row justify="center">

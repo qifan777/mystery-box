@@ -13,6 +13,7 @@ import com.github.binarywang.wxpay.service.WxPayService;
 import io.github.qifan777.server.Fetchers;
 import io.github.qifan777.server.Objects;
 import io.github.qifan777.server.Tables;
+import io.github.qifan777.server.address.entity.Address;
 import io.github.qifan777.server.address.entity.dto.AddressView;
 import io.github.qifan777.server.address.repository.AddressRepository;
 import io.github.qifan777.server.box.item.entity.MysteryBoxOrderItemTable;
@@ -79,46 +80,45 @@ public class MysteryBoxOrderService {
     public String create(MysteryBoxOrderInput mysteryBoxOrderInput) {
         String orderId = IdUtil.fastSimpleUUID();
         PaymentPriceView calculated = calculate(mysteryBoxOrderInput);
+        // 支付详情
         Payment payment = PaymentDraft.$.produce(
-                draft -> draft
+                calculated.toEntity(),
+                paymentDraft -> paymentDraft
                         .setId(orderId)
-                        .setPayType(DictConstants.PayType.WE_CHAT_PAY)
-                        // 优惠券价格
-                        .setCouponAmount(calculated.getCouponAmount())
-                        // 商品价格
-                        .setProductAmount(calculated.getProductAmount())
-                        // 运费
-                        .setDeliveryFee(calculated.getDeliveryFee())
-                        // VIP价格
-                        .setVipAmount(calculated.getVipAmount())
-                        // 实际支付价格
-                        .setPayAmount(calculated.getPayAmount())
-        );
+                        .setPayType(DictConstants.PayType.WE_CHAT_PAY));
+        Address address = addressRepository
+                .findUserAddressById(mysteryBoxOrderInput.getBaseOrder().getAddressId())
+                .orElseThrow(() -> new BusinessException("地址不存在"));
+
         MysteryBoxOrder entity = Objects.createMysteryBoxOrder(mysteryBoxOrderInput
                         .toEntity(),
                 draft -> {
-                    // 设置订单项关联的订单id
+                    // 设置订单项关联的订单id，并且设置盲盒快照
                     draft.setItems(draft
                             .items()
                             .stream()
                             .map(item -> Objects.createMysteryBoxOrderItem(item, mysteryBoxOrderItemDraft -> {
+                                MysteryBox box = mysteryBoxRepository
+                                        .findById(item.mysteryBoxId(), MysteryBoxRepository.COMPLEX_FETCHER_FOR_FRONT)
+                                        .orElseThrow(() -> new BusinessException(ResultCode.NotFindError, "盲盒不存在"));
                                 mysteryBoxOrderItemDraft.setMysteryBoxOrderId(orderId)
-                                        .setMysteryBox(new MystryBoxView(mysteryBoxRepository.findById(item.mysteryBoxId(), MysteryBoxRepository.COMPLEX_FETCHER_FOR_FRONT)
-                                                .orElseThrow(() -> new BusinessException(ResultCode.NotFindError, "盲盒不存在"))));
+                                        // 盲盒快照，购买时的盲盒详情存入
+                                        .setMysteryBox(new MystryBoxView(box));
                             }))
                             .toList()
                     );
                     // 设置订单的id和状态
                     draft.setId(orderId)
                             .setStatus(DictConstants.ProductOrderStatus.TO_BE_PAID);
-                    // 设置支付详情
+                    // 设置基础订单
                     draft.baseOrder()
                             .setId(orderId)
                             .setType(DictConstants.OrderType.PRODUCT_ORDER)
                             .setPayment(payment)
-                            .setAddress(new AddressView(addressRepository.findUserAddressById(mysteryBoxOrderInput.getBaseOrder().getAddressId())
-                                    .orElseThrow(() -> new BusinessException("地址不存在"))));
+                            // 地址快照
+                            .setAddress(new AddressView(address));
                 });
+        // 同时创建mysteryBoxOrder, mysteryBoxOrderItem, baseOrder, payment
         MysteryBoxOrder save = mysteryBoxOrderRepository.save(entity);
         return save.id();
     }

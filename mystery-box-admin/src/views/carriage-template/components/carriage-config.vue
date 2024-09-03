@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
 import type { CarriageConfig } from '@/apis/__generated/model/static'
 import { pcaTextArr } from 'element-china-area-data'
 import { Close, Plus } from '@element-plus/icons-vue'
@@ -20,87 +19,88 @@ const handleAddCarriage = () => {
     priceRanges: []
   })
 }
-onMounted(() => {
-  console.log(pcaTextArr)
-})
 </script>
 
 <template>
   <div class="carriages-config">
-    <div class="carriage" v-for="(carriage, index2) in carriages" :key="index2">
-      <el-form size="small" label-width="80" label-position="left">
-        <el-form-item label="省份">
-          <el-select multiple v-model="carriage.province" collapse-tags>
-            <el-option
-              v-for="option in pcaTextArr"
-              :key="option.label"
-              :value="option.value"
-              :label="option.label"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="价格区间">
-          <div class="price-config">
-            <div
-              class="price-range-wrapper"
-              v-for="(priceRange, index) in carriage.priceRanges"
-              :key="index"
-            >
-              <el-form class="price-range" label-position="left" label-width="100" size="small">
-                <el-form-item label="订单最低价格">
-                  <el-input-number
-                    v-model="priceRange.minPrice"
-                    :min="0"
-                    controls-position="right"
-                  ></el-input-number>
-                </el-form-item>
-                <el-form-item label="订单最高价格">
-                  <el-input-number
-                    v-model="priceRange.maxPrice"
-                    :min="0"
-                    controls-position="right"
-                  ></el-input-number>
-                </el-form-item>
-                <el-form-item label="运费">
-                  <el-input-number
-                    v-model="priceRange.carriage"
-                    controls-position="right"
-                  ></el-input-number>
-                </el-form-item>
-              </el-form>
-              <el-button
-                class="close"
-                type="warning"
-                link
-                @click="handleDeletePriceRange(carriage, index)"
-              >
-                <el-icon>
-                  <close></close>
-                </el-icon>
-              </el-button>
+    <transition-group name="list">
+      <div class="carriage" v-for="(carriage, index2) in carriages" :key="index2">
+        <el-form size="small" label-width="80" label-position="left">
+          <el-form-item label="省份">
+            <el-select multiple v-model="carriage.province" collapse-tags>
+              <el-option
+                v-for="option in pcaTextArr"
+                :key="option.label"
+                :value="option.value"
+                :label="option.label"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="价格区间">
+            <div class="price-config">
+              <transition-group name="list">
+                <div
+                  class="price-range-wrapper"
+                  v-for="(priceRange, index) in carriage.priceRanges"
+                  :key="index"
+                >
+                  <el-form class="price-range" label-position="left" label-width="100" size="small">
+                    <el-form-item label="订单最低价格">
+                      <el-input-number
+                        v-model="priceRange.minPrice"
+                        :min="0"
+                        controls-position="right"
+                      ></el-input-number>
+                    </el-form-item>
+                    <el-form-item label="订单最高价格">
+                      <el-input-number
+                        v-model="priceRange.maxPrice"
+                        :min="0"
+                        controls-position="right"
+                      ></el-input-number>
+                    </el-form-item>
+                    <el-form-item label="运费">
+                      <el-input-number
+                        v-model="priceRange.carriage"
+                        controls-position="right"
+                      ></el-input-number>
+                    </el-form-item>
+                  </el-form>
+                  <el-button
+                    class="close"
+                    type="warning"
+                    link
+                    @click="handleDeletePriceRange(carriage, index)"
+                  >
+                    <el-icon>
+                      <close></close>
+                    </el-icon>
+                  </el-button>
+                </div>
+              </transition-group>
             </div>
-          </div>
-        </el-form-item>
-        <el-form-item label=" ">
-          <el-button
-            class="add"
-            type="primary"
-            size="small"
-            style="margin-top: 10px"
-            @click="handleAddPriceRange(carriage)"
-          >
-            <el-icon>
-              <plus></plus>
-            </el-icon>
-          </el-button>
-        </el-form-item>
-      </el-form>
-      <el-button class="carriage-close" type="warning" link @click="handleDeleteCarriage(index2)">
-        <el-icon>
-          <close></close>
-        </el-icon>
-      </el-button>
-    </div>
+          </el-form-item>
+          <el-form-item label=" ">
+            <el-button
+              class="add"
+              type="primary"
+              size="small"
+              style="margin-top: 10px"
+              @click="handleAddPriceRange(carriage)"
+            >
+              <el-icon>
+                <plus></plus>
+              </el-icon>
+            </el-button>
+          </el-form-item>
+        </el-form>
+        <el-button class="carriage-close" type="warning" link @click="handleDeleteCarriage(index2)">
+          <el-icon>
+            <close></close>
+          </el-icon>
+        </el-button>
+      </div>
+    </transition-group>
     <el-button
       class="add"
       type="primary"
@@ -116,6 +116,17 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
 .carriage {
   position: relative;
   margin-top: 10px;

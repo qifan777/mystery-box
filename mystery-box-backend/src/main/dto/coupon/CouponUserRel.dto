@@ -10,6 +10,12 @@ input CouponUserRelInput {
 specification CouponUserRelSpec {
     #allScalars
     id(creator)
-    id(coupon)
+    flat(coupon) {
+        id as couponId
+        le(thresholdAmount)
+        le(effectiveDate)
+        ge(expirationDate)
+        status as couponStatus
+    }
     id(user)
 }

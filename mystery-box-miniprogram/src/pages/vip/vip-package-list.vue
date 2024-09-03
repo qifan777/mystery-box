@@ -37,12 +37,13 @@ const { pageData, reloadPageData } = usePageHelper(
   },
   { enableLoad: false },
 );
+const active = ref();
 Taro.useDidShow(async () => {
   await reloadPageData();
   active.value = pageData.value.content[0].id;
 });
-const active = ref("0");
 const handleSubmit = () => {
+  Taro.showLoading();
   api.vipOrderForFrontController
     .save({
       body: {
@@ -57,6 +58,7 @@ const handleSubmit = () => {
         timeStamp: res.timeStamp,
         signType: res.signType as "RSA",
         success: () => {
+          Taro.showLoading();
           Taro.showToast({
             title: "支付成功",
             icon: "success",
@@ -64,7 +66,8 @@ const handleSubmit = () => {
           Taro.navigateBack();
         },
         fail: (res) => {
-          console.log(res);
+          Taro.showLoading();
+          Taro.showToast({ title: res.errMsg, icon: "none" });
         },
       });
     });
@@ -73,9 +76,11 @@ const handleSubmit = () => {
 
 <style lang="scss">
 @import "../../app.scss";
+
 page {
   background-color: rgba(black, 0.05);
 }
+
 .vip-package-page {
   .vip-package-list {
     padding: 20px;

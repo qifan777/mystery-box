@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @Slf4j
@@ -20,14 +19,15 @@ public class VipService {
     private final VipRepository vipRepository;
     private final VipConfigRepository vipConfigRepository;
 
-    public BigDecimal calculate(BigDecimal price) {
-        AtomicReference<BigDecimal> vipPrice = new AtomicReference<>(BigDecimal.ZERO);
-        vipRepository.findCurrentUserVip().ifPresent(vip -> {
-            if (vip.endTime().isAfter(LocalDateTime.now())) {
-                BigDecimal value = BigDecimal.TEN.subtract(vipConfigRepository.get().getDiscount()).divide(BigDecimal.TEN, 2, RoundingMode.HALF_UP);
-                vipPrice.set(price.multiply(value));
-            }
-        });
-        return vipPrice.get();
+    public BigDecimal calculate(BigDecimal amount) {
+        return vipRepository.findCurrentUserVip()
+                .map(vip -> {
+                    if (vip.endTime().isAfter(LocalDateTime.now())) {
+                        BigDecimal value = BigDecimal.TEN.subtract(vipConfigRepository.get().getDiscount()).divide(BigDecimal.TEN, 2, RoundingMode.HALF_UP);
+                        return amount.multiply(value);
+                    }
+                    return BigDecimal.ZERO;
+                })
+                .orElse(BigDecimal.ZERO);
     }
 }

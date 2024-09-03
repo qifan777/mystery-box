@@ -32,7 +32,7 @@ public interface Coupon extends BaseEntity {
      * 发放数量
      */
     @GenNumberField(label = "发放数量", order = 2)
-    Integer releasedQuantity();
+    int releasedQuantity();
 
     /**
      * 生效时间

@@ -14,29 +14,16 @@ import {
   PaymentPriceView,
 } from "@/apis/__generated/model/static";
 
-type CouponUserRel =
-  CouponUserRelDto["CouponUserRelRepository/COMPLEX_FETCHER_FOR_FRONT"];
-type Address = AddressDto["AddressRepository/COMPLEX_FETCHER_FOR_FRONT"];
-type MysteryBoxItem = {
-  box: MysteryBoxDto["MysteryBoxRepository/COMPLEX_FETCHER_FOR_FRONT"];
-  count: number;
-};
 const order = ref<MysteryBoxOrderInput>({
   baseOrder: { addressId: "" },
   items: [],
 });
-const chosenAddress = ref<Address>();
-Taro.eventCenter.on("address", (value: Address) => {
-  chosenAddress.value = value;
-  order.value.baseOrder.addressId = value.id;
-  calculate();
-});
-const chosenCoupon = ref<CouponUserRel>();
-Taro.eventCenter.on("coupon", (couponUserRel?: CouponUserRel) => {
-  chosenCoupon.value = couponUserRel;
-  order.value.baseOrder.couponUserId = couponUserRel?.id;
-  calculate();
-});
+
+// ----- 接收购买的盲盒 -----
+type MysteryBoxItem = {
+  box: MysteryBoxDto["MysteryBoxRepository/COMPLEX_FETCHER_FOR_FRONT"];
+  count: number;
+};
 const boxItems = ref<MysteryBoxItem[]>();
 Taro.eventCenter.on("items", (items: MysteryBoxItem[]) => {
   boxItems.value = items;
@@ -45,13 +32,39 @@ Taro.eventCenter.on("items", (items: MysteryBoxItem[]) => {
   });
   calculate();
 });
+// ----- 接收购买的盲盒 -----
 
+// ----- 接收选择的地址 -----
+type Address = AddressDto["AddressRepository/COMPLEX_FETCHER_FOR_FRONT"];
+const chosenAddress = ref<Address>();
+Taro.eventCenter.on("address", (value: Address) => {
+  chosenAddress.value = value;
+  order.value.baseOrder.addressId = value.id;
+  calculate();
+});
+// ----- 接收选择的地址 -----
+
+// ----- 接收选择的优惠券 -----
+type CouponUserRel =
+  CouponUserRelDto["CouponUserRelRepository/COMPLEX_FETCHER_FOR_FRONT"];
+const chosenCoupon = ref<CouponUserRel>();
+Taro.eventCenter.on("coupon", (couponUserRel?: CouponUserRel) => {
+  chosenCoupon.value = couponUserRel;
+  order.value.baseOrder.couponUserId = couponUserRel?.id;
+  calculate();
+});
+// ----- 接收选择的优惠券 -----
+
+// ----- 计算价格 -----
 const payment = ref<PaymentPriceView>();
 const calculate = async () => {
   payment.value = await api.mysteryBoxOrderForFrontController.calculate({
     body: order.value,
   });
 };
+// ----- 计算价格 -----
+
+// ----- 提交订单 -----
 const handleSubmit = () => {
   if (!chosenAddress.value) {
     Taro.showToast({ title: "请选择地址", icon: "error" });
@@ -65,6 +78,7 @@ const handleSubmit = () => {
       Taro.navigateTo({ url: `./box-order-details?id=` + res });
     });
 };
+// ----- 提交订单 -----
 </script>
 
 <template>
@@ -113,7 +127,7 @@ const handleSubmit = () => {
           center
           @click="
             switchPage(
-              `/pages/coupon/coupon-available-list?amount=${payment.productAmount}&id=${chosenCoupon?.id}`,
+              `/pages/coupon/index?amount=${payment.productAmount}&id=${chosenCoupon?.id}`,
             )
           "
         >

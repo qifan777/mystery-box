@@ -77,3 +77,6 @@ oss:
     access-key-secret: xxx
     endpoint: xxx
     bucket-name: xxx
+tenant:
+  map:
+    key: xxx

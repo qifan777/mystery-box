@@ -6,8 +6,6 @@ import io.github.qifan777.server.coupon.root.entity.dto.CouponInput;
 import io.github.qifan777.server.coupon.root.entity.dto.CouponSpec;
 import io.github.qifan777.server.coupon.root.repository.CouponRepository;
 import io.github.qifan777.server.coupon.root.service.CouponService;
-import io.github.qifan777.server.coupon.user.entity.CouponUserRel;
-import io.github.qifan777.server.coupon.user.repository.CouponUserRelRepository;
 import io.github.qifan777.server.infrastructure.model.QueryRequest;
 import io.qifan.infrastructure.common.exception.BusinessException;
 import lombok.AllArgsConstructor;
@@ -19,7 +17,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -62,10 +59,5 @@ public class CouponForFrontController {
         });
         couponRepository.deleteAllById(ids);
         return true;
-    }
-
-    @GetMapping("available")
-    public List<@FetchBy(value = "COMPLEX_FETCHER_FOR_FRONT", ownerType = CouponUserRelRepository.class) CouponUserRel> availableCoupons(@RequestParam BigDecimal amount) {
-        return couponService.availableCoupons(amount);
     }
 }
