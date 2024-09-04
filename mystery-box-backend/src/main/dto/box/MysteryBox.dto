@@ -8,6 +8,9 @@ input MysteryBoxInput {
 }
 //MystryBoxView {
 //    #allScalars
+//    products{
+//        #allScalars
+//    }
 //}
 specification MysteryBoxSpec {
     #allScalars

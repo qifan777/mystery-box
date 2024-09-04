@@ -13,6 +13,8 @@ import io.github.qifan777.server.infrastructure.model.QueryRequest;
 import io.github.qifan777.server.order.entity.BaseOrderFetcher;
 import io.github.qifan777.server.payment.entity.PaymentFetcher;
 import io.github.qifan777.server.user.root.entity.UserFetcher;
+import io.qifan.infrastructure.common.constants.ResultCode;
+import io.qifan.infrastructure.common.exception.BusinessException;
 import org.babyfish.jimmer.spring.repository.JRepository;
 import org.babyfish.jimmer.spring.repository.SpringOrders;
 import org.babyfish.jimmer.spring.repository.support.SpringPageFactory;
@@ -56,11 +58,22 @@ public interface MysteryBoxOrderRepository extends JRepository<MysteryBoxOrder, 
                         SpringPageFactory.getInstance());
     }
 
+    default MysteryBoxOrder findByIdForFront(String id) {
+        return findById(id, COMPLEX_FETCHER_FOR_FRONT).orElseThrow(() -> new BusinessException(ResultCode.NotFindError, "订单不存在"));
+    }
+
     default List<MysteryBoxOrder> findUnpaidOrder() {
         return sql().createQuery(t)
                 .where(t.status().eq(DictConstants.ProductOrderStatus.TO_BE_PAID))
                 .where(t.createdTime().le(LocalDateTime.now().minusMinutes(5)))
                 .select(t.fetch(Fetchers.MYSTERY_BOX_ORDER_FETCHER.allScalarFields().creator(true)))
+                .execute();
+    }
+
+    default void changeStatus(String id, DictConstants.ProductOrderStatus status) {
+        sql().createUpdate(t)
+                .where(t.id().eq(id))
+                .set(t.status(), status)
                 .execute();
     }
 

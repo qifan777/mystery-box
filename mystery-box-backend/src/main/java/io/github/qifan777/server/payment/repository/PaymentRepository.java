@@ -13,6 +13,8 @@ import org.babyfish.jimmer.sql.fetcher.Fetcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
+
 public interface PaymentRepository extends JRepository<Payment, String> {
     PaymentTable t = PaymentTable.$;
     PaymentFetcher COMPLEX_FETCHER_FOR_ADMIN = PaymentFetcher.$.allScalarFields()
@@ -31,5 +33,13 @@ public interface PaymentRepository extends JRepository<Payment, String> {
                 .select(t.fetch(fetcher))
                 .fetchPage(queryRequest.getPageNum() - 1, queryRequest.getPageSize(),
                         SpringPageFactory.getInstance());
+    }
+
+    default void updatePayTimeAndTradeNo(String id, String tradNo, LocalDateTime payTime) {
+        sql().createUpdate(t)
+                .where(t.id().eq(id))
+                .set(t.payTime(), payTime)
+                .set(t.tradeNo(), tradNo)
+                .execute();
     }
 }

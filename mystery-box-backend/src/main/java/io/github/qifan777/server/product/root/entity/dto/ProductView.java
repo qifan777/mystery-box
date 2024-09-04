@@ -32,9 +32,9 @@ import org.jetbrains.annotations.NotNull;
         file = "<mystery-box-backend>/src/main/dto/product/Product.dto"
 )
 @GenEntity
-public class ProductVIew implements View<Product> {
-    public static final DtoMetadata<Product, ProductVIew> METADATA = 
-        new DtoMetadata<Product, ProductVIew>(
+public class ProductView implements View<Product> {
+    public static final DtoMetadata<Product, ProductView> METADATA =
+        new DtoMetadata<Product, ProductView>(
             ProductFetcher.$
                 .createdTime()
                 .editedTime()
@@ -47,7 +47,7 @@ public class ProductVIew implements View<Product> {
                 .specifications()
                 .qualityType()
                 .attributes(),
-            ProductVIew::new
+            ProductView::new
     );
 
     private String id;
@@ -74,10 +74,10 @@ public class ProductVIew implements View<Product> {
 
     private List<KeyValue> attributes;
 
-    public ProductVIew() {
+    public ProductView() {
     }
 
-    public ProductVIew(@NotNull Product base) {
+    public ProductView(@NotNull Product base) {
         this.id = base.id();
         this.createdTime = base.createdTime();
         this.editedTime = base.editedTime();
@@ -339,7 +339,7 @@ public class ProductVIew implements View<Product> {
         if (o == null || this.getClass() != o.getClass()) {
             return false;
         }
-        ProductVIew other = (ProductVIew) o;
+        ProductView other = (ProductView) o;
         if (!Objects.equals(id, other.id)) {
             return false;
         }

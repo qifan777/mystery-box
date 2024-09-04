@@ -17,7 +17,7 @@ import io.qifan.infrastructure.common.exception.BusinessException;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -34,7 +34,7 @@ public class WeChatPayService {
     private final UserWeChatRepository userWeChatRepository;
     private final WxPayPropertiesExtension wxPayPropertiesExtension;
     private final WxPayProperties wxPayProperties;
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final StringRedisTemplate redisTemplate;
     private final ObjectMapper objectMapper;
     private final WxPayService wxPayService;
     private final static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
@@ -45,13 +45,12 @@ public class WeChatPayService {
         if (!StpUtil.getLoginIdAsString().equals(baseOrder.creator().id())) {
             throw new BusinessException(ResultCode.NotGrant, "无法支付他人订单");
         }
-        Object prepayRes = redisTemplate.opsForValue()
+        String prepayParams = redisTemplate.opsForValue()
                 .get("prepay:" + baseOrder.id());
-        if (prepayRes != null) {
-            log.info("已存在预支付订单：{}", prepayRes);
+        if (prepayParams != null) {
+            log.info("已存在预支付订单：{}", prepayParams);
             // 如果存在预支付订单则直接发起支付
-            return objectMapper.readValue(
-                    objectMapper.writeValueAsString(prepayRes), WxPayUnifiedOrderV3Result.JsapiResult.class);
+            return objectMapper.readValue(prepayParams, WxPayUnifiedOrderV3Result.JsapiResult.class);
         }
         WxPayUnifiedOrderV3Result.JsapiResult wxPayAppOrderResult = wxPayService.createOrderV3(TradeTypeEnum.JSAPI,
                 create(weChatPayModel));
@@ -59,7 +58,7 @@ public class WeChatPayService {
         // 预支付订单过期
         redisTemplate.opsForValue()
                 .set("prepay:" + baseOrder.id(),
-                        wxPayAppOrderResult,
+                        objectMapper.writeValueAsString(wxPayAppOrderResult),
                         weChatPayModel.getExpiredMinutes(),
                         TimeUnit.MINUTES);
         log.info("预支付订单，下单成功：{}", wxPayAppOrderResult);

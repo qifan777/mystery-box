@@ -33,7 +33,7 @@ export const boxWeChatPay = (id: string) => {
             Taro.hideLoading();
           },
           fail: (res) => {
-            console.log(res);
+            Taro.showToast({ title: res.errMsg });
             reject(res);
             Taro.hideLoading();
           },

@@ -10,35 +10,30 @@ import com.github.binarywang.wxpay.bean.request.WxPayRefundV3Request;
 import com.github.binarywang.wxpay.bean.result.WxPayRefundV3Result;
 import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderV3Result;
 import com.github.binarywang.wxpay.service.WxPayService;
-import io.github.qifan777.server.Fetchers;
 import io.github.qifan777.server.Objects;
-import io.github.qifan777.server.Tables;
 import io.github.qifan777.server.address.entity.Address;
 import io.github.qifan777.server.address.entity.dto.AddressView;
 import io.github.qifan777.server.address.repository.AddressRepository;
-import io.github.qifan777.server.box.item.entity.MysteryBoxOrderItemTable;
+import io.github.qifan777.server.box.item.repository.MysteryBoxOrderItemRepository;
 import io.github.qifan777.server.box.order.entity.MysteryBoxOrder;
-import io.github.qifan777.server.box.order.entity.MysteryBoxOrderTable;
 import io.github.qifan777.server.box.order.entity.dto.MysteryBoxOrderInput;
 import io.github.qifan777.server.box.order.repository.MysteryBoxOrderRepository;
 import io.github.qifan777.server.box.root.entity.MysteryBox;
-import io.github.qifan777.server.box.root.entity.MysteryBoxFetcher;
 import io.github.qifan777.server.box.root.entity.dto.MystryBoxView;
 import io.github.qifan777.server.box.root.repository.MysteryBoxRepository;
 import io.github.qifan777.server.carriage.service.CarriageTemplateService;
 import io.github.qifan777.server.coupon.root.service.CouponService;
 import io.github.qifan777.server.dict.model.DictConstants;
 import io.github.qifan777.server.infrastructure.model.WxPayPropertiesExtension;
-import io.github.qifan777.server.order.entity.BaseOrderTable;
+import io.github.qifan777.server.order.repository.BaseOrderRepository;
 import io.github.qifan777.server.payment.entity.Payment;
 import io.github.qifan777.server.payment.entity.PaymentDraft;
-import io.github.qifan777.server.payment.entity.PaymentTable;
 import io.github.qifan777.server.payment.entity.dto.PaymentPriceView;
 import io.github.qifan777.server.payment.model.WeChatPayModel;
+import io.github.qifan777.server.payment.repository.PaymentRepository;
 import io.github.qifan777.server.payment.service.WeChatPayService;
 import io.github.qifan777.server.product.root.entity.Product;
-import io.github.qifan777.server.product.root.entity.ProductFetcher;
-import io.github.qifan777.server.product.root.entity.dto.ProductVIew;
+import io.github.qifan777.server.product.root.entity.dto.ProductView;
 import io.github.qifan777.server.refund.entity.RefundRecord;
 import io.github.qifan777.server.refund.entity.RefundRecordDraft;
 import io.github.qifan777.server.refund.repository.RefundRecordRepository;
@@ -48,7 +43,6 @@ import io.qifan.infrastructure.common.exception.BusinessException;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.babyfish.jimmer.sql.JSqlClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,27 +50,37 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
+import static io.github.qifan777.server.dict.model.DictConstants.*;
 
 @Service
 @Slf4j
 @AllArgsConstructor
 @Transactional
 public class MysteryBoxOrderService {
-    private final MysteryBoxOrderRepository mysteryBoxOrderRepository;
-    private final JSqlClient jSqlClient;
-    private final AddressRepository addressRepository;
-    private final VipService vipService;
-    private final CouponService couponService;
-    private final WeChatPayService weChatPayService;
-    private final WxPayService wxPayService;
-    private final WxPayPropertiesExtension wxPayPropertiesExtension;
-    private final CarriageTemplateService carriageTemplateService;
-    private final MysteryBoxRepository mysteryBoxRepository;
     private final int[] LEGENDARY_RANGE = new int[]{0, 12};
     private final int[] HIDDEN_RANGE = new int[]{13, 758};
     private final int[] GENERAL_RANGE = new int[]{759, 9999};
+    private final WxPayPropertiesExtension wxPayPropertiesExtension;
+    private final CouponService couponService;
+    private final CarriageTemplateService carriageTemplateService;
+    private final VipService vipService;
+    private final WeChatPayService weChatPayService;
+    private final WxPayService wxPayService;
+    private final AddressRepository addressRepository;
+    private final BaseOrderRepository baseOrderRepository;
+    private final MysteryBoxRepository mysteryBoxRepository;
+    private final MysteryBoxOrderRepository mysteryBoxOrderRepository;
+    private final MysteryBoxOrderItemRepository mysteryBoxOrderItemRepository;
+    private final PaymentRepository paymentRepository;
+    private final RefundRecordRepository refundRecordRepository;
 
+    /**
+     * 调用{@link #calculate(MysteryBoxOrderInput)}计算得到支付详情<br/>
+     * 创建盲盒订单对象，盲盒订单项对象，基础订单对象
+     * @param mysteryBoxOrderInput 订单输入
+     * @return 订单id
+     */
     public String create(MysteryBoxOrderInput mysteryBoxOrderInput) {
         String orderId = IdUtil.fastSimpleUUID();
         PaymentPriceView calculated = calculate(mysteryBoxOrderInput);
@@ -85,11 +89,10 @@ public class MysteryBoxOrderService {
                 calculated.toEntity(),
                 paymentDraft -> paymentDraft
                         .setId(orderId)
-                        .setPayType(DictConstants.PayType.WE_CHAT_PAY));
+                        .setPayType(PayType.WE_CHAT_PAY));
         Address address = addressRepository
                 .findUserAddressById(mysteryBoxOrderInput.getBaseOrder().getAddressId())
                 .orElseThrow(() -> new BusinessException("地址不存在"));
-
         MysteryBoxOrder entity = Objects.createMysteryBoxOrder(mysteryBoxOrderInput
                         .toEntity(),
                 draft -> {
@@ -109,11 +112,11 @@ public class MysteryBoxOrderService {
                     );
                     // 设置订单的id和状态
                     draft.setId(orderId)
-                            .setStatus(DictConstants.ProductOrderStatus.TO_BE_PAID);
+                            .setStatus(ProductOrderStatus.TO_BE_PAID);
                     // 设置基础订单
                     draft.baseOrder()
                             .setId(orderId)
-                            .setType(DictConstants.OrderType.PRODUCT_ORDER)
+                            .setType(OrderType.PRODUCT_ORDER)
                             .setPayment(payment)
                             // 地址快照
                             .setAddress(new AddressView(address));
@@ -123,6 +126,11 @@ public class MysteryBoxOrderService {
         return save.id();
     }
 
+    /**
+     * 前端输入优惠券id，地址id，盲盒id，购买数量通过计算得到商品总价、优惠券价格、邮费、vip优惠、实付金额
+     * @param mysteryBoxOrderInput 订单表单
+     * @return 计算价格
+     */
     public PaymentPriceView calculate(MysteryBoxOrderInput mysteryBoxOrderInput) {
         var baseOrder = mysteryBoxOrderInput.getBaseOrder();
         Payment produce = PaymentDraft.$.produce(draft -> {
@@ -132,9 +140,9 @@ public class MysteryBoxOrderService {
                     .setCouponAmount(BigDecimal.ZERO);
             BigDecimal totalPrice = BigDecimal.ZERO;
             for (var item : mysteryBoxOrderInput.getItems()) {
-                MysteryBox product = Optional.ofNullable(jSqlClient.findById(MysteryBox.class, item.getMysteryBoxId()))
+                MysteryBox mysteryBox = mysteryBoxRepository.findById(item.getMysteryBoxId())
                         .orElseThrow(() -> new BusinessException(ResultCode.NotFindError, "盲盒不存在"));
-                BigDecimal price = product.price().multiply(BigDecimal.valueOf(item.getMysteryBoxCount()));
+                BigDecimal price = mysteryBox.price().multiply(BigDecimal.valueOf(item.getMysteryBoxCount()));
                 totalPrice = totalPrice.add(price);
             }
             // 计算商品总价
@@ -156,97 +164,121 @@ public class MysteryBoxOrderService {
         return new PaymentPriceView(produce);
     }
 
+    /**
+     * 生成预支付参数
+     * @param id 盲盒订单id
+     * @return 微信预支付参数
+     */
     public WxPayUnifiedOrderV3Result.JsapiResult prepay(String id) {
-        MysteryBoxOrder mysteryBoxOrder = mysteryBoxOrderRepository.findById(id, MysteryBoxOrderRepository.COMPLEX_FETCHER_FOR_FRONT)
-                .orElseThrow(() -> new BusinessException(ResultCode.NotFindError));
-        checkStatus(mysteryBoxOrder, DictConstants.ProductOrderStatus.TO_BE_PAID);
+        MysteryBoxOrder mysteryBoxOrder = mysteryBoxOrderRepository.findByIdForFront(id);
+        checkStatus(mysteryBoxOrder, ProductOrderStatus.TO_BE_PAID);
         checkOwner(mysteryBoxOrder);
-        WxPayUnifiedOrderV3Result.JsapiResult prepay = weChatPayService.prepay(new WeChatPayModel().setBaseOrder(mysteryBoxOrder.baseOrder())
+        WxPayUnifiedOrderV3Result.JsapiResult prepay = weChatPayService.prepay(new WeChatPayModel()
+                .setBaseOrder(mysteryBoxOrder.baseOrder())
                 .setExpiredMinutes(5)
                 .setNotifyUrl("/front/mystery-box-order/notify/pay/wechat"));
         log.info("预支付订单内容：{}", prepay);
         return prepay;
     }
 
+    /**
+     * 支付成功回调
+     * @param body 微信回调请求的body，带解密
+     * @param signatureHeader 回调的请求头参数
+     * @return 返回内容且http状态是200就代表成功，出现异常http状态会变成400，微信会认为回调失败，微信会轮询重试
+     */
     @SneakyThrows
     public String paymentNotifyWechat(String body, SignatureHeader signatureHeader) {
+        // 解密回调数据
         WxPayNotifyV3Result.DecryptNotifyResult notifyResult = wxPayService.parseOrderNotifyV3Result(body, signatureHeader)
                 .getResult();
         log.info("支付回调:{}", notifyResult);
         String outTradeNo = notifyResult.getOutTradeNo();
-        MysteryBoxOrder mysteryBoxOrder = mysteryBoxOrderRepository.findById(outTradeNo,
-                MysteryBoxOrderRepository.COMPLEX_FETCHER_FOR_FRONT).orElseThrow(
-                () -> new BusinessException(ResultCode.NotFindError, "订单不存在"));
-        // 设置微信支付订单id
+        // 回调结果中的outTradeNo就代表预支付时填写的盲盒订单id
+        MysteryBoxOrder mysteryBoxOrder = mysteryBoxOrderRepository.findByIdForFront(outTradeNo);
+        // 切换当前登录上下文为订单创建人的id
         StpUtil.switchTo(mysteryBoxOrder.creator().id());
-        mysteryBoxOrder.items().stream().forEach(mysteryBoxOrderItem -> {
-            MysteryBox mysteryBox = mysteryBoxRepository.findById(mysteryBoxOrderItem.mysteryBoxId(),
-                            MysteryBoxFetcher.$.products(ProductFetcher.$.allTableFields()))
-                    .orElseThrow(() -> new BusinessException(ResultCode.NotFindError, "盲盒不存在"));
-            List<Product> legendaryList = mysteryBox.products().stream().filter(product -> product.qualityType().equals(DictConstants.QualityType.LEGENDARY)).toList();
-            List<Product> hiddenList = mysteryBox.products().stream().filter(product -> product.qualityType().equals(DictConstants.QualityType.HIDDEN)).toList();
-            List<Product> generalList = mysteryBox.products().stream().filter(product -> product.qualityType().equals(DictConstants.QualityType.GENERAL)).toList();
-            int legendaryCount = 0;
-            int hiddenCount = 0;
-            int generalCount = 0;
-            for (int i = 0; i < mysteryBoxOrderItem.mysteryBoxCount(); i++) {
-                int randomInt = RandomUtil.randomInt(0, 10000);
-                if (randomInt >= LEGENDARY_RANGE[0] && randomInt <= LEGENDARY_RANGE[1]) {
-                    legendaryCount++;
-                }
-                if (randomInt >= HIDDEN_RANGE[0] && randomInt <= HIDDEN_RANGE[1]) {
-                    hiddenCount++;
-                }
-                if (randomInt >= GENERAL_RANGE[0] && randomInt <= GENERAL_RANGE[1]) {
-                    generalCount++;
-                }
-            }
-            List<Product> products = new ArrayList<>();
-            products.addAll(RandomUtil.randomEleList(legendaryList, legendaryCount));
-            products.addAll(RandomUtil.randomEleList(hiddenList, hiddenCount));
-            products.addAll(RandomUtil.randomEleList(generalList, generalCount));
-            MysteryBoxOrderItemTable t = MysteryBoxOrderItemTable.$;
-            jSqlClient.createUpdate(t)
-                    .set(t.products(), products.stream().map(ProductVIew::new).toList())
-                    .where(t.id().eq(mysteryBoxOrderItem.id()))
-                    .execute();
+        mysteryBoxOrder.items().forEach(mysteryBoxOrderItem -> {
+            // 从盲盒快照中获取商品信息
+            List<Product> products = mysteryBoxOrderItem.mysteryBox()
+                    .getProducts()
+                    .stream()
+                    .map(MystryBoxView.TargetOf_products::toEntity)
+                    .toList();
+            // 随机生成商品
+            List<ProductView> generateProducts = generateProducts(products, mysteryBoxOrderItem.mysteryBoxCount());
+            // 更新订单项
+            mysteryBoxOrderItemRepository.updateProducts(mysteryBoxOrderItem.id(), generateProducts);
         });
-
-        PaymentTable t1 = PaymentTable.$;
-        jSqlClient.createUpdate(t1)
-                .where(t1.baseOrder().id().eq(mysteryBoxOrder.id()))
-                .set(t1.tradeNo(), notifyResult.getTransactionId())
-                .set(t1.payTime(), LocalDateTime.now())
-                .execute();
-        changeStatus(mysteryBoxOrder.id(), DictConstants.ProductOrderStatus.TO_BE_DELIVERED);
+        // 更新支付时间和微信的交易订单id
+        paymentRepository.updatePayTimeAndTradeNo(mysteryBoxOrder.id(), notifyResult.getTransactionId(), LocalDateTime.now());
+        // 状态变为待发货
+        mysteryBoxOrderRepository.changeStatus(mysteryBoxOrder.id(), ProductOrderStatus.TO_BE_DELIVERED);
         return mysteryBoxOrder.id();
     }
 
+    /**
+     * 从盲盒关联的商品中随机生成指定数量的商品，生成的概率是由商品品质决定
+     * @param products 盲盒中的商品
+     * @param count 购买的盲盒数量
+     * @return 生成的商品列表
+     */
+    public List<ProductView> generateProducts(List<Product> products, int count) {
+        List<Product> legendaryList = products
+                .stream()
+                .filter(product -> product.qualityType().equals(DictConstants.QualityType.LEGENDARY))
+                .toList();
+        List<Product> hiddenList = products
+                .stream()
+                .filter(product -> product.qualityType().equals(DictConstants.QualityType.HIDDEN))
+                .toList();
+        List<Product> generalList = products
+                .stream()
+                .filter(product -> product.qualityType().equals(DictConstants.QualityType.GENERAL))
+                .toList();
+        int legendaryCount = 0;
+        int hiddenCount = 0;
+        int generalCount = 0;
+        // 根据概率生成
+        for (int i = 0; i < count; i++) {
+            int randomInt = RandomUtil.randomInt(0, 10000);
+            if (randomInt >= LEGENDARY_RANGE[0] && randomInt <= LEGENDARY_RANGE[1]) {
+                legendaryCount++;
+            }
+            if (randomInt >= HIDDEN_RANGE[0] && randomInt <= HIDDEN_RANGE[1]) {
+                hiddenCount++;
+            }
+            if (randomInt >= GENERAL_RANGE[0] && randomInt <= GENERAL_RANGE[1]) {
+                generalCount++;
+            }
+        }
+        List<Product> generatedProducts = new ArrayList<>();
+        generatedProducts.addAll(RandomUtil.randomEleList(legendaryList, legendaryCount));
+        generatedProducts.addAll(RandomUtil.randomEleList(hiddenList, hiddenCount));
+        generatedProducts.addAll(RandomUtil.randomEleList(generalList, generalCount));
+        return generatedProducts.stream().map(ProductView::new).toList();
+    }
+
     public String deliver(String id, String trackingNumber) {
-        checkStatus(mysteryBoxOrderRepository.findById(id).orElseThrow(() -> new BusinessException(ResultCode.NotFindError, "订单不存在"))
-                , DictConstants.ProductOrderStatus.TO_BE_DELIVERED, DictConstants.ProductOrderStatus.TO_BE_RECEIVED);
-        var t = BaseOrderTable.$;
-        jSqlClient.createUpdate(t)
-                .set(t.trackingNumber(), trackingNumber)
-                .where(t.id().eq(id));
-        changeStatus(id, DictConstants.ProductOrderStatus.TO_BE_RECEIVED);
+        MysteryBoxOrder mysteryBoxOrder = mysteryBoxOrderRepository.findByIdForFront(id);
+        checkStatus(mysteryBoxOrder, ProductOrderStatus.TO_BE_DELIVERED, ProductOrderStatus.TO_BE_RECEIVED);
+        baseOrderRepository.updateTrackingNumber(id, trackingNumber);
+        mysteryBoxOrderRepository.changeStatus(id, ProductOrderStatus.TO_BE_RECEIVED);
         return id;
     }
 
     public String unpaidCancelForUser(String id) {
-        MysteryBoxOrder mysteryBoxOrder = mysteryBoxOrderRepository.findById(id, MysteryBoxOrderRepository.COMPLEX_FETCHER_FOR_FRONT)
-                .orElseThrow(() -> new BusinessException(ResultCode.NotFindError, "订单不存在"));
-        checkStatus(mysteryBoxOrder, DictConstants.ProductOrderStatus.TO_BE_PAID);
+        MysteryBoxOrder mysteryBoxOrder = mysteryBoxOrderRepository.findByIdForFront(id);
+        checkStatus(mysteryBoxOrder, ProductOrderStatus.TO_BE_PAID);
         checkOwner(mysteryBoxOrder);
-        changeStatus(mysteryBoxOrder.id(), DictConstants.ProductOrderStatus.CLOSED);
+        mysteryBoxOrderRepository.changeStatus(mysteryBoxOrder.id(), ProductOrderStatus.CLOSED);
         return mysteryBoxOrder.id();
     }
 
     @SneakyThrows
     public String paidCancelForAdmin(String orderId) {
-        MysteryBoxOrder mysteryBoxOrder = mysteryBoxOrderRepository.findById(orderId, MysteryBoxOrderRepository.COMPLEX_FETCHER_FOR_FRONT)
-                .orElseThrow(() -> new BusinessException(ResultCode.NotFindError, "订单不存在"));
-        checkStatus(mysteryBoxOrder, DictConstants.ProductOrderStatus.TO_BE_RECEIVED, DictConstants.ProductOrderStatus.TO_BE_DELIVERED);
+        MysteryBoxOrder mysteryBoxOrder = mysteryBoxOrderRepository.findByIdForFront(orderId);
+        checkStatus(mysteryBoxOrder, ProductOrderStatus.TO_BE_RECEIVED, ProductOrderStatus.TO_BE_DELIVERED);
         String refundOrderId = IdUtil.fastSimpleUUID();
         RefundRecord refundRecord = RefundRecordDraft.$.produce(draft -> {
             draft.setId(refundOrderId);
@@ -271,7 +303,7 @@ public class MysteryBoxOrderService {
                     .setRefundApplicationDetails(wxPayRefundV3Result)
                     .setReason("退款");
         });
-        return jSqlClient.save(refundRecord).getModifiedEntity().id();
+        return refundRecordRepository.save(refundRecord).id();
     }
 
     @SneakyThrows
@@ -279,39 +311,34 @@ public class MysteryBoxOrderService {
         WxPayRefundNotifyV3Result.DecryptNotifyResult result = wxPayService.parseRefundNotifyV3Result(body, signatureHeader)
                 .getResult();
         log.info("退款回调：{}", result);
-        RefundRecord refundRecord = Optional.ofNullable(jSqlClient.findById(RefundRecordRepository.COMPLEX_FETCHER_FOR_FRONT, result.getOutRefundNo()))
+        RefundRecord refundRecord = refundRecordRepository.findById(result.getOutRefundNo(), RefundRecordRepository.COMPLEX_FETCHER_FOR_FRONT)
                 .orElseThrow(() -> new BusinessException(ResultCode.NotFindError, "退款订单不存在"));
-        MysteryBoxOrder mysteryBoxOrder = mysteryBoxOrderRepository.findById(refundRecord.orderId(), Fetchers.MYSTERY_BOX_ORDER_FETCHER.creator(true))
-                .orElseThrow(() -> new BusinessException(ResultCode.NotFindError, "订单不存在"));
+        MysteryBoxOrder mysteryBoxOrder = mysteryBoxOrderRepository.findByIdForFront(refundRecord.orderId());
         StpUtil.switchTo(mysteryBoxOrder.creator().id());
         if (result.getRefundStatus().equals("SUCCESS")) {
             // 需要将订单回退到未支付状态再取消
-            log.info("将订单状态回退到待支付");
-            changeStatus(result.getOutTradeNo(), DictConstants.ProductOrderStatus.TO_BE_PAID);
+            mysteryBoxOrderRepository.changeStatus(result.getOutTradeNo(), ProductOrderStatus.TO_BE_PAID);
             log.info("取消订单订单");
             unpaidCancelForUser(result.getOutTradeNo());
             log.info("将订单状态设置为已退款");
-            changeStatus(result.getOutTradeNo(), DictConstants.ProductOrderStatus.REFUNDED);
+            mysteryBoxOrderRepository.changeStatus(result.getOutTradeNo(), ProductOrderStatus.REFUNDED);
             log.info("生成退款记录");
-            jSqlClient.save(RefundRecordDraft.$.produce(refundRecord, draft -> draft.setRefundNotifyDetails(result)
-                    .setStatus(DictConstants.RefundStatus.SUCCESS)));
+            RefundRecord produce = RefundRecordDraft.$.produce(refundRecord,
+                    draft -> draft.setRefundNotifyDetails(result)
+                            .setStatus(DictConstants.RefundStatus.SUCCESS));
+            refundRecordRepository.save(produce);
         } else {
-            jSqlClient.save(RefundRecordDraft.$.produce(refundRecord, draft -> draft.setRefundNotifyDetails(result)
-                    .setStatus(DictConstants.RefundStatus.FAILED)));
+            RefundRecord produce = RefundRecordDraft.$.produce(refundRecord, draft -> draft
+                    .setRefundNotifyDetails(result)
+                    .setStatus(DictConstants.RefundStatus.FAILED));
+            refundRecordRepository.save(produce);
         }
 
         return refundRecord.id();
     }
 
-    public void changeStatus(String id, DictConstants.ProductOrderStatus productOrderStatus) {
-        MysteryBoxOrderTable t = Tables.MYSTERY_BOX_ORDER_TABLE;
-        mysteryBoxOrderRepository.sql().createUpdate(t)
-                .where(t.id().eq(id))
-                .set(t.status(), productOrderStatus)
-                .execute();
-    }
 
-    public void checkStatus(MysteryBoxOrder mysteryBoxOrder, DictConstants.ProductOrderStatus... productOrderStatusList) {
+    public void checkStatus(MysteryBoxOrder mysteryBoxOrder, ProductOrderStatus... productOrderStatusList) {
         for (var status : productOrderStatusList) {
             if (mysteryBoxOrder.status().equals(status)) {
                 return;

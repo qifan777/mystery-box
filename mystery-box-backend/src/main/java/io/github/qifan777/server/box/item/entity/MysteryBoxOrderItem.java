@@ -3,7 +3,7 @@ package io.github.qifan777.server.box.item.entity;
 import io.github.qifan777.server.box.order.entity.MysteryBoxOrder;
 import io.github.qifan777.server.box.root.entity.dto.MystryBoxView;
 import io.github.qifan777.server.infrastructure.jimmer.BaseEntity;
-import io.github.qifan777.server.product.root.entity.dto.ProductVIew;
+import io.github.qifan777.server.product.root.entity.dto.ProductView;
 import jakarta.validation.constraints.Null;
 import org.babyfish.jimmer.sql.Entity;
 import org.babyfish.jimmer.sql.Key;
@@ -28,5 +28,5 @@ public interface MysteryBoxOrderItem extends BaseEntity {
 
     @Null
     @Serialized
-    List<ProductVIew> products();
+    List<ProductView> products();
 }
