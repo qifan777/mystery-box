@@ -3,16 +3,17 @@
 本项目模仿b站的魔力赏盲盒，每个盲盒中可以添加多个商品，支付成功后根据概率随机挑选盲盒内的商品。同时加入了VIP，优惠券，运费计算等功能。
 
 ## 项目预览
-
+<div style="display: flex;align-items: center;justify-content: space-around;flex-wrap: wrap">
 <img height="500" src="mystery-box-admin/src/assets/images/image.png"/>
-
 <img height="500" src="mystery-box-admin/src/assets/images/image-1.png"/>
-
 <img height="500" src="mystery-box-admin/src/assets/images/image-2.png"/>
-
 <img height="500" src="mystery-box-admin/src/assets/images/image-3.png"/>
-
 <img height="500" src="mystery-box-admin/src/assets/images/image-4.png"/>
+</div>
+
+
+
+
 
 ## 功能点
 
