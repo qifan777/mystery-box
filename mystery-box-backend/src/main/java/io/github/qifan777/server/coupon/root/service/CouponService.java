@@ -6,7 +6,6 @@ import io.github.qifan777.server.coupon.root.entity.dto.CouponGiftInput;
 import io.github.qifan777.server.coupon.root.repository.CouponRepository;
 import io.github.qifan777.server.coupon.user.entity.CouponUserRel;
 import io.github.qifan777.server.coupon.user.entity.CouponUserRelDraft;
-import io.github.qifan777.server.coupon.user.entity.CouponUserRelTable;
 import io.github.qifan777.server.coupon.user.repository.CouponUserRelRepository;
 import io.github.qifan777.server.dict.model.DictConstants;
 import io.qifan.infrastructure.common.constants.ResultCode;
@@ -53,18 +52,10 @@ public class CouponService {
 
     public BigDecimal calculate(String id, BigDecimal amount) {
         if (!StringUtils.hasText(id)) return BigDecimal.ZERO;
-        var t = CouponUserRelTable.$;
-        CouponUserRel couponUser = couponUserRelRepository.sql().createQuery(t)
-                .where(t.userId().eq(StpUtil.getLoginIdAsString()))
-                .where(t.status().eq(DictConstants.CouponUseStatus.UNUSED))
-                .where(t.coupon().thresholdAmount().le(amount))
-                .where(t.coupon().effectiveDate().le(LocalDateTime.now()))
-                .where(t.coupon().expirationDate().ge(LocalDateTime.now()))
-                .where(t.id().eq(id))
-                .select(t.fetch(CouponUserRelRepository.COMPLEX_FETCHER_FOR_ADMIN))
-                .fetchOptional()
-                .orElseThrow(() -> new BusinessException(ResultCode.NotFindError, "优惠券失效"));
-        Coupon coupon = couponUser.coupon();
+        CouponUserRel couponUserRel = couponUserRelRepository.findById(id, CouponUserRelRepository.COMPLEX_FETCHER_FOR_ADMIN)
+                .orElseThrow(() -> new BusinessException(ResultCode.NotFindError, "优惠券不存在"));
+        checkCouponUser(couponUserRel);
+        Coupon coupon = couponUserRel.coupon();
         if (coupon.couponType().equals(DictConstants.CouponType.DISCOUNT)) {
             return BigDecimal.TEN.subtract(coupon.discount()).divide(BigDecimal.TEN, RoundingMode.DOWN)
                     .multiply(amount);
@@ -74,4 +65,25 @@ public class CouponService {
         throw new BusinessException(ResultCode.ParamSetIllegal, "优惠券类型错误");
     }
 
+    public void checkCouponUser(CouponUserRel couponUserRel) {
+        if (!couponUserRel.status().equals(DictConstants.CouponUseStatus.UNUSED)) {
+            throw new BusinessException(ResultCode.ParamSetIllegal, "优惠券已使用");
+        }
+        if (!couponUserRel.user().id().equals(StpUtil.getLoginIdAsString())) {
+            throw new BusinessException(ResultCode.ParamSetIllegal, "优惠券非本人");
+        }
+        if (!couponUserRel.coupon().effectiveDate().isBefore(LocalDateTime.now())) {
+            throw new BusinessException(ResultCode.ParamSetIllegal, "优惠券未生效");
+        }
+        if (!couponUserRel.coupon().expirationDate().isAfter(LocalDateTime.now())) {
+            throw new BusinessException(ResultCode.ParamSetIllegal, "优惠券已过期");
+        }
+        if (!couponUserRel.coupon().status()) {
+            throw new BusinessException(ResultCode.ParamSetIllegal, "优惠券已下架");
+        }
+    }
+
+    public void changeStatus(String id, DictConstants.CouponUseStatus status) {
+        couponUserRelRepository.changeStatus(id, status);
+    }
 }

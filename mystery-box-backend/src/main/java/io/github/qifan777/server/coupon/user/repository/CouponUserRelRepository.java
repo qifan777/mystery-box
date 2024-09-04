@@ -5,6 +5,7 @@ import io.github.qifan777.server.coupon.user.entity.CouponUserRel;
 import io.github.qifan777.server.coupon.user.entity.CouponUserRelFetcher;
 import io.github.qifan777.server.coupon.user.entity.CouponUserRelTable;
 import io.github.qifan777.server.coupon.user.entity.dto.CouponUserRelSpec;
+import io.github.qifan777.server.dict.model.DictConstants;
 import io.github.qifan777.server.infrastructure.model.QueryRequest;
 import io.github.qifan777.server.user.root.entity.UserFetcher;
 import org.babyfish.jimmer.spring.repository.JRepository;
@@ -36,4 +37,11 @@ public interface CouponUserRelRepository extends JRepository<CouponUserRel, Stri
                 .fetchPage(queryRequest.getPageNum() - 1, queryRequest.getPageSize(),
                         SpringPageFactory.getInstance());
     }
+
+   default void changeStatus(String id, DictConstants.CouponUseStatus couponUseStatus){
+        sql().createUpdate(t)
+                .set(t.status(), couponUseStatus)
+                .where(t.id().eq(id))
+                .execute();
+   };
 }

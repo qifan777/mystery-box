@@ -123,6 +123,8 @@ public class MysteryBoxOrderService {
                 });
         // 同时创建mysteryBoxOrder, mysteryBoxOrderItem, baseOrder, payment
         MysteryBoxOrder save = mysteryBoxOrderRepository.save(entity);
+        // 优惠券设置为已使用
+        couponService.changeStatus(mysteryBoxOrderInput.getBaseOrder().getCouponUserId(), CouponUseStatus.USED);
         return save.id();
     }
 
@@ -259,6 +261,12 @@ public class MysteryBoxOrderService {
         return generatedProducts.stream().map(ProductView::new).toList();
     }
 
+    /**
+     * 管理员在后台发货
+     * @param id 订单id
+     * @param trackingNumber 物流单号
+     * @return 订单id
+     */
     public String deliver(String id, String trackingNumber) {
         MysteryBoxOrder mysteryBoxOrder = mysteryBoxOrderRepository.findByIdForFront(id);
         checkStatus(mysteryBoxOrder, ProductOrderStatus.TO_BE_DELIVERED, ProductOrderStatus.TO_BE_RECEIVED);
@@ -267,23 +275,35 @@ public class MysteryBoxOrderService {
         return id;
     }
 
+    /**
+     * 用户在小程序取消未支付的订单
+     * @param id 订单id
+     * @return 订单id
+     */
     public String unpaidCancelForUser(String id) {
         MysteryBoxOrder mysteryBoxOrder = mysteryBoxOrderRepository.findByIdForFront(id);
         checkStatus(mysteryBoxOrder, ProductOrderStatus.TO_BE_PAID);
         checkOwner(mysteryBoxOrder);
         mysteryBoxOrderRepository.changeStatus(mysteryBoxOrder.id(), ProductOrderStatus.CLOSED);
+        // 优惠券设置为未使用
+        couponService.changeStatus(mysteryBoxOrder.baseOrder().couponUser().id(), CouponUseStatus.UNUSED);
         return mysteryBoxOrder.id();
     }
 
+    /**
+     * 管理员在后台取消已支付的订单，并发起退款操作
+     * @param id 订单id
+     * @return 订单id
+     */
     @SneakyThrows
-    public String paidCancelForAdmin(String orderId) {
-        MysteryBoxOrder mysteryBoxOrder = mysteryBoxOrderRepository.findByIdForFront(orderId);
+    public String paidCancelForAdmin(String id) {
+        MysteryBoxOrder mysteryBoxOrder = mysteryBoxOrderRepository.findByIdForFront(id);
         checkStatus(mysteryBoxOrder, ProductOrderStatus.TO_BE_RECEIVED, ProductOrderStatus.TO_BE_DELIVERED);
         String refundOrderId = IdUtil.fastSimpleUUID();
         RefundRecord refundRecord = RefundRecordDraft.$.produce(draft -> {
             draft.setId(refundOrderId);
             WxPayRefundV3Request wxPayRefundV3Request = new WxPayRefundV3Request().setOutTradeNo(
-                            orderId)
+                            id)
                     .setOutRefundNo(refundOrderId)
                     .setNotifyUrl(wxPayPropertiesExtension.getNotifyUrl() + "/front/mystery-box-order/notify/refund/wechat")
                     .setReason("退款")
@@ -298,7 +318,7 @@ public class MysteryBoxOrderService {
             WxPayRefundV3Result wxPayRefundV3Result = wxPayService.refundV3(wxPayRefundV3Request);
             draft.setRefundId(wxPayRefundV3Result.getRefundId())
                     .setStatus(DictConstants.RefundStatus.REFUNDING)
-                    .setOrderId(orderId)
+                    .setOrderId(id)
                     .setAmount(mysteryBoxOrder.baseOrder().payment().payAmount())
                     .setRefundApplicationDetails(wxPayRefundV3Result)
                     .setReason("退款");
@@ -306,6 +326,12 @@ public class MysteryBoxOrderService {
         return refundRecordRepository.save(refundRecord).id();
     }
 
+    /**
+     * 微信退款回调
+     * @param body 回调的加密请全体
+     * @param signatureHeader 回调请求头
+     * @return 回调是否成功
+     */
     @SneakyThrows
     public String refundNotifyWeChat(String body, SignatureHeader signatureHeader) {
         WxPayRefundNotifyV3Result.DecryptNotifyResult result = wxPayService.parseRefundNotifyV3Result(body, signatureHeader)
@@ -318,11 +344,11 @@ public class MysteryBoxOrderService {
         if (result.getRefundStatus().equals("SUCCESS")) {
             // 需要将订单回退到未支付状态再取消
             mysteryBoxOrderRepository.changeStatus(result.getOutTradeNo(), ProductOrderStatus.TO_BE_PAID);
-            log.info("取消订单订单");
+            // 模拟用户取消订单，包含优惠券回退操作，库存回退（暂时没有）
             unpaidCancelForUser(result.getOutTradeNo());
-            log.info("将订单状态设置为已退款");
+            // 更新退款状态
             mysteryBoxOrderRepository.changeStatus(result.getOutTradeNo(), ProductOrderStatus.REFUNDED);
-            log.info("生成退款记录");
+            // 生成退款记录
             RefundRecord produce = RefundRecordDraft.$.produce(refundRecord,
                     draft -> draft.setRefundNotifyDetails(result)
                             .setStatus(DictConstants.RefundStatus.SUCCESS));
@@ -333,7 +359,6 @@ public class MysteryBoxOrderService {
                     .setStatus(DictConstants.RefundStatus.FAILED));
             refundRecordRepository.save(produce);
         }
-
         return refundRecord.id();
     }
 
