@@ -42,9 +42,6 @@ public class WeChatPayService {
     @SneakyThrows
     public WxPayUnifiedOrderV3Result.JsapiResult prepay(WeChatPayModel weChatPayModel) {
         BaseOrder baseOrder = weChatPayModel.getBaseOrder();
-        if (!StpUtil.getLoginIdAsString().equals(baseOrder.creator().id())) {
-            throw new BusinessException(ResultCode.NotGrant, "无法支付他人订单");
-        }
         String prepayParams = redisTemplate.opsForValue()
                 .get("prepay:" + baseOrder.id());
         if (prepayParams != null) {
