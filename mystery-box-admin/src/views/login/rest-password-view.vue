@@ -82,8 +82,8 @@ const handleSendSMS = () => {
             <div class="content">
               <div class="panel-left">
                 <el-avatar alt="logo" :size="30" shape="square" :src="logo"></el-avatar>
-                <div class="title">会员后台管理系统</div>
-                <div class="description">积分，优惠券,VIP等营销功能</div>
+                <div class="title">盲盒后台管理</div>
+                <div class="description">优惠券,VIP等营销功能</div>
               </div>
               <div class="panel-right">
                 <div class="title">快速开始</div>
